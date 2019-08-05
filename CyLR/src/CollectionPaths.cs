@@ -36,37 +36,40 @@ namespace CyLR
         {
             var defaultPaths = new List<string>
             {
-                @"%SYSTEMROOT%\SchedLgU.Txt",
-                @"%SYSTEMROOT%\Tasks",
-                @"%SYSTEMROOT%\Prefetch",
-                @"%SYSTEMROOT%\inf\setupapi.dev.log",
-                @"%SYSTEMROOT%\Appcompat\Programs",
-                @"%SYSTEMROOT%\System32\drivers\etc\hosts",
-                @"%SYSTEMROOT%\System32\sru",
-                @"%SYSTEMROOT%\System32\winevt\logs",
-                @"%SYSTEMROOT%\System32\Tasks",
-                @"%SYSTEMROOT%\System32\LogFiles\W3SVC1",
-                @"%SYSTEMROOT%\System32\config\SAM",
-                @"%SYSTEMROOT%\System32\config\SYSTEM",
-                @"%SYSTEMROOT%\System32\config\SOFTWARE",
-                @"%SYSTEMROOT%\System32\config\SECURITY",
-                @"%SYSTEMROOT%\System32\config\SAM.LOG1",
-                @"%SYSTEMROOT%\System32\config\SYSTEM.LOG1",
-                @"%SYSTEMROOT%\System32\config\SOFTWARE.LOG1",
-                @"%SYSTEMROOT%\System32\config\SECURITY.LOG1",
-                @"%SYSTEMROOT%\System32\config\SAM.LOG2",
-                @"%SYSTEMROOT%\System32\config\SYSTEM.LOG2",
-                @"%SYSTEMROOT%\System32\config\SOFTWARE.LOG2",
-                @"%SYSTEMROOT%\System32\config\SECURITY.LOG2",
-                @"%PROGRAMDATA%\Microsoft\Search\Data\Applications\Windows",
-                @"%PROGRAMDATA%\Microsoft\Windows\Start Menu\Programs\Startup",
-                @"%SystemDrive%\$Recycle.Bin",
-                @"%SystemDrive%\$LogFile",
-                @"%SystemDrive%\$MFT"
+                $@"{Arguments.DriveLet}\Windows\SchedLgU.Txt",
+                $@"{Arguments.DriveLet}\Windows\Tasks",
+                $@"{Arguments.DriveLet}\Windows\Prefetch",
+                $@"{Arguments.DriveLet}\Windows\Appcompat\Programs",
+                $@"{Arguments.DriveLet}\Windows\System32\drivers\etc\hosts",
+                $@"{Arguments.DriveLet}\Windows\System32\sru",
+                $@"{Arguments.DriveLet}\Windows\System32\winevt\logs",
+                $@"{Arguments.DriveLet}\Windows\System32\Tasks",
+                $@"{Arguments.DriveLet}\Windows\System32\LogFiles\W3SVC1",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SAM",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SYSTEM",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SOFTWARE",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SECURITY",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SAM.LOG1",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SYSTEM.LOG1",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SOFTWARE.LOG1",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SECURITY.LOG1",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SAM.LOG2",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SYSTEM.LOG2",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SOFTWARE.LOG2",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SECURITY.LOG2",
+                $@"{Arguments.DriveLet}\Windows\System32\config\RegBack",
+                $@"{Arguments.DriveLet}\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup",
+                $@"{Arguments.DriveLet}\$MFT",
+                $@"{Arguments.DriveLet}\Windows\System32\dhcp",
+                $@"{Arguments.DriveLet}\Program Files (x86)\TeamViewer\Connections_incoming.txt",
+                $@"{Arguments.DriveLet}\Program Files\TeamViewer\Connections_incoming.txt",
+                $@"{Arguments.DriveLet}\System Volume Information\syscache.hve",
+                $@"{Arguments.DriveLet}\System Volume Information\syscache.hve.LOG1",
+                $@"{Arguments.DriveLet}\System Volume Information\syscache.hve.LOG2",
             };
             if (Usnjrnl)
             {
-                defaultPaths.Add(@"%SystemDrive%\$Extend\$UsnJrnl:$J");
+                defaultPaths.Add($@"{Arguments.DriveLet}\$Extend\$UsnJrnl:$J");
             }
             defaultPaths = defaultPaths.Select(Environment.ExpandEnvironmentVariables).ToList();
 
@@ -74,26 +77,48 @@ namespace CyLR
       			//Add "defaultPaths.Add($@"{user.ProfilePath}" without the quotes in front of the file / path to be collected in each users profile.
             if (!Platform.IsUnixLike())
             {
-              var users = FindUsers();
-              foreach (var user in users)
-              {
-                  defaultPaths.Add($@"{user.ProfilePath}\AppData\Roaming\Microsoft\Windows\Recent");
-                  defaultPaths.Add($@"{user.ProfilePath}\NTUSER.DAT");
-                  defaultPaths.Add($@"{user.ProfilePath}\NTUSER.DAT.LOG1");
-                  defaultPaths.Add($@"{user.ProfilePath}\NTUSER.DAT.LOG2");
-                  defaultPaths.Add($@"{user.ProfilePath}\AppData\Local\Microsoft\Windows\UsrClass.dat");
-                  defaultPaths.Add($@"{user.ProfilePath}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG1");
-                  defaultPaths.Add($@"{user.ProfilePath}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG2");
-                  defaultPaths.Add($@"{user.ProfilePath}\AppData\Local\Microsoft\Windows\Explorer");
-                  defaultPaths.Add($@"{user.ProfilePath}\AppData\Local\Google\Chrome\User Data\Default\History");
-                  defaultPaths.Add($@"{user.ProfilePath}\AppData\Local\Microsoft\Windows\WebCache\");
-                  defaultPaths.Add($@"{user.ProfilePath}\AppData\Local\ConnectedDevicesPlatform");
-                  defaultPaths.Add($@"{user.ProfilePath}\AppData\Roaming\Microsoft\Windows\Recent\AutomaticDestinations\");
-                  defaultPaths.Add($@"{user.ProfilePath}\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline");
-                  defaultPaths.Add($@"{user.ProfilePath}\AppData\Roaming\Mozilla\Firefox\Profiles\");
-              }
-            }
+                try
 
+                {
+                    string UserPath = Arguments.DriveLet + "\\Users\\";
+                    string[] WinUserFolders = Directory.GetDirectories(UserPath);
+                    if (Directory.Exists(UserPath))
+                        foreach (var User in WinUserFolders)
+                        {
+                            defaultPaths.Add($@"{User}\NTUSER.DAT");
+                            defaultPaths.Add($@"{User}\NTUSER.DAT.LOG1");
+                            defaultPaths.Add($@"{User}\NTUSER.DAT.LOG2");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG1");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG2");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\Explorer");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\WebCache\");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\History");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Cookies"); // add Chrome cookies
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Bookmarks"); // add Chrome Bookmarks
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Extensions"); // add Chrome extensions
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Shortcuts"); // add Chrome shortcuts
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\History");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Cookies"); // Chrome Canary collection
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Local\ConnectedDevicesPlatform");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Windows\Recent");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Office\Recent");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Opera");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Terminal Server Client\Cache");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Mozilla\Firefox\Profiles");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\TeamViewer");
+                        }
+                }
+
+                catch (Exception)
+                {
+                    //FAIL
+                }
+            }
             if (Platform.IsUnixLike())
             {
                 defaultPaths = new List<string> { };
@@ -172,34 +197,6 @@ namespace CyLR
                 }
             }
             return paths.Any() ? paths : defaultPaths;
-        }
-        public static IEnumerable<UserProfile> FindUsers()
-        {
-            var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList");
-            foreach (string name in key.GetSubKeyNames())
-            {
-                var path = $@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\{name}";
-                var profile = Registry.GetValue(path, "FullProfile", string.Empty);
-                if (profile != null)
-                {
-                    var result = new UserProfile
-                    {
-                        UserKey = name,
-                        Path = $@"{path}\ProfileImagePath",
-                        ProfilePath = (string)Registry.GetValue(path, "ProfileImagePath", 0),
-                        FullProfile = (int)Registry.GetValue(path, "FullProfile", 0)
-                    };
-                    if (result.FullProfile != -1) yield return result;
-                }
-            }
-        }
-
-        internal class UserProfile
-        {
-            public string UserKey { get; set; }
-            public string Path { get; set; }
-            public string ProfilePath { get; set; }
-            public int FullProfile { get; set; }
         }
     }
 }

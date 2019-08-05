@@ -47,8 +47,8 @@ namespace CyLR
                 "Uses a password to encrypt the archive file"
             },
             {
-                "-zl",
-                "Uses a number between 1-9 to change the compression level of the archive file"
+                "-dl",
+                "Specifies Drive Letter you want to collect from."
             },
             {
                 "--no-usnjrnl",
@@ -61,7 +61,7 @@ namespace CyLR
         public readonly string HelpTopic;
 
         public readonly string CollectionFilePath = ".";
-        public readonly List<string> CollectionFiles = null;
+        public readonly List<string> CollectionFiles = null; 
         public readonly string OutputPath = ".";
         public readonly string OutputFileName = $"{Environment.MachineName}.zip";
         public readonly bool UseSftp;
@@ -71,12 +71,13 @@ namespace CyLR
         public readonly bool DryRun;
         public readonly bool ForceNative;
         public readonly string ZipPassword;
-        public readonly string ZipLevel;
-        public readonly bool Usnjrnl = true;
+        public readonly bool Usnjrnl = false;
+        public static string DriveLet = "C:";
 
         public Arguments(IEnumerable<string> args)
         {
             ForceNative = !Platform.SupportsRawAccess(); //default this to whether or not the platform supports raw access
+
             var argEnum = args.GetEnumerator();
             while (!HelpRequested && argEnum.MoveNext())
             {
@@ -93,19 +94,15 @@ namespace CyLR
                     case "-od":
                         OutputPath = argEnum.GetArgumentParameter();
                         break;
-
                     case "-of":
                         OutputFileName = argEnum.GetArgumentParameter();
                         break;
-
                     case "-u":
                         UserName = argEnum.GetArgumentParameter();
                         break;
-
                     case "-p":
                         UserPassword = argEnum.GetArgumentParameter();
                         break;
-
                     case "-s":
                         SFTPServer = argEnum.GetArgumentParameter();
                         break;
@@ -117,15 +114,14 @@ namespace CyLR
                     case "-zp":
                         ZipPassword = argEnum.GetArgumentParameter();
                         break;
-
-                    case "-zl":
-                        ZipLevel = argEnum.GetArgumentParameter();
+                    case "-dl":
+                        DriveLet = argEnum.GetArgumentParameter();
                         break;
 
                     case "--no-usnjrnl":
                         Usnjrnl = false;
                         break;
-
+                       
                     case "--force-native":
                         if (ForceNative)
                         {
@@ -133,7 +129,6 @@ namespace CyLR
                         }
                         ForceNative = true;
                         break;
-
                     case "--dry-run":
                         DryRun = true;
                         break;
@@ -156,7 +151,7 @@ namespace CyLR
                 {
                     throw new ArgumentException("The flags -u, -p, and -s must all have values to continue.  Please try again.");
                 }
-
+                
                 if (DryRun)
                 {
                     //Disable SFTP in a dry run.
