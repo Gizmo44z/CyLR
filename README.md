@@ -24,7 +24,7 @@ CyLR uses .NET Core and runs natively on Windows, Linux, and MacOS. Self contain
 ## SYNOPSIS
 
 ```
-CyLR.exe [--help] [-od] [-of] [-u] [-p] [-s] [-c] [-zp]
+CyLR.exe [--help] [-od] [-of] [-u] [-p] [-s] [-c] [-zp] [-dl] [--no-usnjrnl]
 ```
 
 ## DESCRIPTION
