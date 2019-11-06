@@ -93,6 +93,7 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG2");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\Explorer");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\WebCache\");
+							defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\History\");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\History");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Cookies"); // add Chrome cookies
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Bookmarks"); // add Chrome Bookmarks
