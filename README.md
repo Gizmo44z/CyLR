@@ -169,4 +169,4 @@ Collect artifacts from a mounted image on the E: drive
 ## AUTHORS
 * [Jason Yegge](https://github.com/Lansatac)
 * [Alan Orlikoski](https://github.com/rough007)
-* [Bryan Hennessey] (https://github.com/Gizmo44z)
+* [Bryan Hennessey](https://github.com/Gizmo44z)
