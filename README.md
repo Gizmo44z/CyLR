@@ -61,7 +61,7 @@ Windows Default
     * %PROGRAMDATA%\Microsoft\Windows\Start Menu\Programs\Startup
     * %SystemDrive%\$Recycle.Bin
     * %SystemDrive%\$LogFile
-    * %SystemDrive%\$MFT
+    * $MFT of all fixed, NTFS drives
 * Artifacts For All Users
     * {user.ProfilePath}\NTUSER.DAT
     * {user.ProfilePath}\AppData\Local\Microsoft\Windows\UsrClass.dat
@@ -106,8 +106,10 @@ Mac and Linux Default
 ## OPTIONS
 * '-\-help' — Show help message and exit.
 * '-od' — Defines the directory that the zip archive will be created in. Defaults to current working directory. (applies to SFTP and local storage options)
-* '-of' — Defines the name of the zip archive will be created. Defaults to host machine's name.
+* '-of' — Defines the name of the zip archive will be created. Defaults to host machine's name + date\time run.
 * '-zp' — If specified, the resulting zip file will be password protected with this password.
+* '-dl' -- Will specify which drive letter collection should be collected from (requires ":" to be used i.e. "D:").
+* '-mount' -- Will prevent MFT collection of all NTFS fixed drives and only collect the "-dl" variable.
 * SFTP Options
     * '-u' — SFTP username
     * '-p' — SFTP password
@@ -159,6 +161,12 @@ Collect artifacts, send data to SFTP server 8.8.8.8, and keep all artifacts in m
     CyLR.exe -u username -p password -s 8.8.8.8 -m
     ```
 
+Collect artifacts from a mounted image on the E: drive
+    ```
+    CyLR.exe -mount -dl E:
+    ```
+    
 ## AUTHORS
 * [Jason Yegge](https://github.com/Lansatac)
 * [Alan Orlikoski](https://github.com/rough007)
+* [Bryan Hennessey] (https://github.com/Gizmo44z)
