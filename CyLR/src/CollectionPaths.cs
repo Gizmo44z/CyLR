@@ -39,16 +39,19 @@ namespace CyLR
                 $@"{Arguments.DriveLet}\Windows\SchedLgU.Txt",
                 $@"{Arguments.DriveLet}\Windows\Tasks",
                 $@"{Arguments.DriveLet}\Windows\Prefetch",
-                $@"{Arguments.DriveLet}\Windows\Appcompat\Programs",
+                $@"{Arguments.DriveLet}\Windows\Appcompat\Programs\install",
+                $@"{Arguments.DriveLet}\Windows\Appcompat\Programs\Amcache.hve",
+                $@"{Arguments.DriveLet}\Windows\Appcompat\Programs\Amcache.hve.LOG1",
+                $@"{Arguments.DriveLet}\Windows\Appcompat\Programs\Amcache.hve.LOG2",
+                $@"{Arguments.DriveLet}\Windows\Appcompat\Programs\Amcache.hve.tmp.LOG1",
+                $@"{Arguments.DriveLet}\Windows\Appcompat\Programs\Amcache.hve.tmp.LOG2",
+                $@"{Arguments.DriveLet}\Windows\Appcompat\Programs\recentfilecache.bcf",
                 $@"{Arguments.DriveLet}\Windows\System32\drivers\etc\hosts",
                 $@"{Arguments.DriveLet}\Windows\System32\sru",
                 $@"{Arguments.DriveLet}\Windows\System32\winevt\logs",
                 $@"{Arguments.DriveLet}\Windows\System32\Tasks",
                 $@"{Arguments.DriveLet}\Windows\System32\LogFiles\W3SVC1",
-                $@"{Arguments.DriveLet}\Windows\System32\config\SAM",
-                $@"{Arguments.DriveLet}\Windows\System32\config\SYSTEM",
-                $@"{Arguments.DriveLet}\Windows\System32\config\SOFTWARE",
-                $@"{Arguments.DriveLet}\Windows\System32\config\SECURITY",
+                $@"{Arguments.DriveLet}\Windows\System32\config\",
                 $@"{Arguments.DriveLet}\Windows\System32\config\SAM.LOG1",
                 $@"{Arguments.DriveLet}\Windows\System32\config\SYSTEM.LOG1",
                 $@"{Arguments.DriveLet}\Windows\System32\config\SOFTWARE.LOG1",
@@ -57,24 +60,54 @@ namespace CyLR
                 $@"{Arguments.DriveLet}\Windows\System32\config\SYSTEM.LOG2",
                 $@"{Arguments.DriveLet}\Windows\System32\config\SOFTWARE.LOG2",
                 $@"{Arguments.DriveLet}\Windows\System32\config\SECURITY.LOG2",
-                $@"{Arguments.DriveLet}\Windows\System32\config\RegBack",
                 $@"{Arguments.DriveLet}\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup",
-                $@"{Arguments.DriveLet}\$MFT",
                 $@"{Arguments.DriveLet}\Windows\System32\dhcp",
+                $@"{Arguments.DriveLet}\ProgramData\Microsoft\RAC\PublishedData",
                 $@"{Arguments.DriveLet}\Program Files (x86)\TeamViewer\Connections_incoming.txt",
                 $@"{Arguments.DriveLet}\Program Files\TeamViewer\Connections_incoming.txt",
                 $@"{Arguments.DriveLet}\System Volume Information\syscache.hve",
                 $@"{Arguments.DriveLet}\System Volume Information\syscache.hve.LOG1",
                 $@"{Arguments.DriveLet}\System Volume Information\syscache.hve.LOG2",
+                $@"{Arguments.DriveLet}\ProgramData\Microsoft\Network\Downloader\",
+                $@"{Arguments.DriveLet}\Windows\System32\bits.log",
             };
-            if (Usnjrnl)
+
+            if (Usnjrnl == true)
             {
                 defaultPaths.Add($@"{Arguments.DriveLet}\$Extend\$UsnJrnl:$J");
             }
             defaultPaths = defaultPaths.Select(Environment.ExpandEnvironmentVariables).ToList();
 
-      			//This section will attempt to collect files or folder locations under each users profile by pulling their ProfilePath from the registry and adding it in front.
-      			//Add "defaultPaths.Add($@"{user.ProfilePath}" without the quotes in front of the file / path to be collected in each users profile.
+            //This will collect all fixed drive MFT files if you did not select a specific mounted drive to collect from.
+            //Use with -dl if you only want a specific drive collected rather than all fixed drives on a system.
+            if (Arguments.DriveLet == "C:")
+            {
+                try
+                {
+                    DriveInfo[] allDrives = DriveInfo.GetDrives();
+                    foreach (DriveInfo d in allDrives)
+                    {
+                        if (d.DriveType == DriveType.Fixed && d.DriveFormat == "NTFS")
+                        {
+                            defaultPaths.Add($@"{d.Name}$MFT");
+                        }
+                    }
+                }
+                catch(FileNotFoundException )
+                {
+                    //FAIL
+                }
+            }
+            
+            //If -dl switch is used against something other than "C:", only the drive letter variable MFT will be collected.
+            if (Arguments.DriveLet != "C:")
+            {
+                defaultPaths.Add($@"{Arguments.DriveLet}\$MFT");
+                
+            }
+            
+            //This section will attempt to collect files or folder locations under each users profile by pulling their ProfilePath from the registry and adding it in front.
+            //Add "defaultPaths.Add($@"{user.ProfilePath}" without the quotes in front of the file / path to be collected in each users profile.
             if (!Platform.IsUnixLike())
             {
                 try
@@ -91,7 +124,6 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG1");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG2");
-                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\Explorer");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\WebCache\");
 							defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\History\");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\History");
@@ -111,7 +143,43 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Roaming\Opera");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Terminal Server Client\Cache");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Mozilla\Firefox\Profiles");
-                            defaultPaths.Add($@"{User}\AppData\Roaming\TeamViewer");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\TeamViewer");                
+                        }
+                }
+
+                catch (Exception)
+                {
+                    //FAIL
+                }
+            }
+            if (!Platform.IsUnixLike())
+            {
+                try
+
+                {
+                    string UserPath2k3 = Arguments.DriveLet + "\\Documents and Settings\\";
+                    string[] WinUserFolders2k3 = Directory.GetDirectories(UserPath2k3);
+                    if (Directory.Exists(UserPath2k3))
+                        foreach (var User2k3 in WinUserFolders2k3)
+                        {
+                            defaultPaths.Add($@"{User2k3}\NTUSER.DAT");
+                            defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG");
+                            defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG1");
+                            defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG2");
+                            defaultPaths.Add($@"{User2k3}\Recent\");
+                            defaultPaths.Add($@"{User2k3}\PrivacIE\");
+                            defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Microsoft\Windows\UsrClass.dat");
+                            defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Microsoft\Windows\UsrClass.dat.LOG");
+                            defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Microsoft\Windows\UsrClass.dat.LOG1");
+                            defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Microsoft\Windows\UsrClass.dat.LOG2");
+                            defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Microsoft\Terminal Server Client\");
+                            defaultPaths.Add($@"{User2k3}\Local Settings\History\History.IE5\");
+                            defaultPaths.Add($@"{User2k3}\Local Settings\Microsoft\Windows\WebCache\");
+                            defaultPaths.Add($@"{User2k3}\Local Settings\Microsoft\Windows\History\");
+                            defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Google\Chrome\User Data\Default\History\");
+                            defaultPaths.Add($@"{User2k3}\Application Data\Opera\");
+                            defaultPaths.Add($@"{User2k3}\Application Data\Mozilla\Firefox\Profiles\");
+                            defaultPaths.Add($@"{User2k3}\Application Data\TeamViewer");
                         }
                 }
 

@@ -59,11 +59,11 @@ namespace CyLR
         public readonly bool HelpRequested;
 
         public readonly string HelpTopic;
-
+        
         public readonly string CollectionFilePath = ".";
         public readonly List<string> CollectionFiles = null; 
         public readonly string OutputPath = ".";
-        public readonly string OutputFileName = $"{Environment.MachineName}.zip";
+        public readonly string OutputFileName = $"{Environment.MachineName}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}.zip", DateTime.Now)}";
         public readonly bool UseSftp;
         public readonly string UserName = string.Empty;
         public readonly string UserPassword = string.Empty;
