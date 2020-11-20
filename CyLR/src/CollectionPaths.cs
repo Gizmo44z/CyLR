@@ -70,6 +70,10 @@ namespace CyLR
                 $@"{Arguments.DriveLet}\System Volume Information\syscache.hve.LOG2",
                 $@"{Arguments.DriveLet}\ProgramData\Microsoft\Network\Downloader\",
                 $@"{Arguments.DriveLet}\Windows\System32\bits.log",
+                $@"{Arguments.DriveLet}\Windows\System32\Tasks",
+                $@"{Arguments.DriveLet}\inetpub\logs\LogFiles",
+                $@"{Arguments.DriveLet}\Windows\System32\LogFiles\HTTPERR",
+                $@"{Arguments.DriveLet}\Windows\System32\wbem\Repository",
             };
 
             if (Usnjrnl == true)
@@ -143,7 +147,11 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Roaming\Opera");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Terminal Server Client\Cache");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Mozilla\Firefox\Profiles");
-                            defaultPaths.Add($@"{User}\AppData\Roaming\TeamViewer");                
+                            defaultPaths.Add($@"{User}\AppData\Roaming\TeamViewer");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\winscp.rnd");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\winscp.ini");
+                            defaultPaths.Add($@"{User}\AppData\Local\Putty.rnd");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Edge\User Data\Default");
                         }
                 }
 

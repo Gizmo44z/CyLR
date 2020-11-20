@@ -2,21 +2,36 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <StartupObject>CyLR.Program</StartupObject>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <StartupObject></StartupObject>
     <ApplicationIcon></ApplicationIcon>
+    <PublishTrimmed>true</PublishTrimmed>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishReadyToRunShowWarnings>false</PublishReadyToRunShowWarnings>
     <Win32Resource />
-    <Version>2.1.0</Version>
+    <Version>2.2.0</Version>
     <RepositoryUrl>https://github.com/orlikoski/CyLR</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/orlikoski/CyLR/blob/master/LICENSE</PackageLicenseUrl>
     <Copyright>2018</Copyright>
     <PackageIconUrl>Martin-Berube-Character-Knight.ico</PackageIconUrl>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <Platforms>AnyCPU;x86</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Discutils" Version="0.13.0-alpha" />
-    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="1.0.0-alpha-*" Condition="'$(USE_CORERT)' == 'TRUE'" />
+    <!--<PackageReference Include="Microsoft.DotNet.ILCompiler" Version="1.0.0-alpha-*" Condition="'$(USE_CORERT)' == 'TRUE'" />-->
     <PackageReference Include="RawDiskLib" Version="0.1.4" />
     <PackageReference Include="SharpZipLib" Version="1.0.0" />
     <PackageReference Include="SSH.NET" Version="2016.1.0" />

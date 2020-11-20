@@ -51,8 +51,8 @@ namespace CyLR
                 "Specifies Drive Letter you want to collect from."
             },
             {
-                "--no-usnjrnl",
-                "Skips collecting $UsnJrnl"
+                "-usnjrnl",
+                "Collects $UsnJrnl"
             }
         };
 
@@ -118,8 +118,8 @@ namespace CyLR
                         DriveLet = argEnum.GetArgumentParameter();
                         break;
 
-                    case "--no-usnjrnl":
-                        Usnjrnl = false;
+                    case "-usnjrnl":
+                        Usnjrnl = true;
                         break;
                        
                     case "--force-native":
