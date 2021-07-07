@@ -29,7 +29,7 @@ namespace CyLR
             proc.Start();
             while (!proc.StandardOutput.EndOfStream)
             {
-                yield return  proc.StandardOutput.ReadLine();
+                yield return proc.StandardOutput.ReadLine();
             };
         }
         public static List<string> GetPaths(Arguments arguments, List<string> additionalPaths, bool Usnjrnl)
@@ -69,11 +69,50 @@ namespace CyLR
                 $@"{Arguments.DriveLet}\System Volume Information\syscache.hve.LOG1",
                 $@"{Arguments.DriveLet}\System Volume Information\syscache.hve.LOG2",
                 $@"{Arguments.DriveLet}\ProgramData\Microsoft\Network\Downloader\",
+                $@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos File Scanner\Logs\",
+                $@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Device Control\logs\",
+                $@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Data Control\logs",
+                $@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Anti-Virus\logs",
+                $@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Tamper Protection\logs",
+                $@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Network Threat Protection\Logs",
                 $@"{Arguments.DriveLet}\Windows\System32\bits.log",
                 $@"{Arguments.DriveLet}\Windows\System32\Tasks",
                 $@"{Arguments.DriveLet}\inetpub\logs\LogFiles",
                 $@"{Arguments.DriveLet}\Windows\System32\LogFiles\HTTPERR",
                 $@"{Arguments.DriveLet}\Windows\System32\wbem\Repository",
+                $@"{Arguments.DriveLet}\Windows.old\SchedLgU.Txt",
+                $@"{Arguments.DriveLet}\Windows.old\Tasks",
+                $@"{Arguments.DriveLet}\Windows.old\Prefetch",
+                $@"{Arguments.DriveLet}\Windows.old\Appcompat\Programs\install",
+                $@"{Arguments.DriveLet}\Windows.old\Appcompat\Programs\Amcache.hve",
+                $@"{Arguments.DriveLet}\Windows.old\Appcompat\Programs\Amcache.hve.LOG1",
+                $@"{Arguments.DriveLet}\Windows.old\Appcompat\Programs\Amcache.hve.LOG2",
+                $@"{Arguments.DriveLet}\Windows.old\Appcompat\Programs\Amcache.hve.tmp.LOG1",
+                $@"{Arguments.DriveLet}\Windows.old\Appcompat\Programs\Amcache.hve.tmp.LOG2",
+                $@"{Arguments.DriveLet}\Windows.old\Appcompat\Programs\recentfilecache.bcf",
+                $@"{Arguments.DriveLet}\Windows.old\System32\drivers\etc\hosts",
+                $@"{Arguments.DriveLet}\Windows.old\System32\sru",
+                $@"{Arguments.DriveLet}\Windows.old\System32\winevt\logs",
+                $@"{Arguments.DriveLet}\Windows.old\System32\Tasks",
+                $@"{Arguments.DriveLet}\Windows.old\System32\LogFiles\W3SVC1",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\SAM.LOG1",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\SOFTWARE.LOG1",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\SECURITY.LOG1",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\SAM.LOG2",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\SYSTEM.LOG2",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\SOFTWARE.LOG2",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\SECURITY.LOG2",
+                $@"{Arguments.DriveLet}\Windows.old\System32\dhcp",
+                $@"{Arguments.DriveLet}\Windows.old\System32\bits.log",
+                $@"{Arguments.DriveLet}\Windows.old\System32\Tasks",
+                $@"{Arguments.DriveLet}\Windows.old\System32\LogFiles\HTTPERR",
+                $@"{Arguments.DriveLet}\Windows.old\System32\wbem\Repository",
+                $@"{Arguments.DriveLet}\ProgramData\AnyDesk\ad_svc.trace",
+                $@"{Arguments.DriveLet}\Windows\System32\LogFiles\SUM",
+                $@"{Arguments.DriveLet}\Windows.old\System32\LogFiles\SUM",
+                $@"{Arguments.DriveLet}\kworking",
+
             };
 
             if (Usnjrnl == true)
@@ -97,19 +136,19 @@ namespace CyLR
                         }
                     }
                 }
-                catch(FileNotFoundException )
+                catch (FileNotFoundException)
                 {
                     //FAIL
                 }
             }
-            
+
             //If -dl switch is used against something other than "C:", only the drive letter variable MFT will be collected.
             if (Arguments.DriveLet != "C:")
             {
                 defaultPaths.Add($@"{Arguments.DriveLet}\$MFT");
-                
+
             }
-            
+
             //This section will attempt to collect files or folder locations under each users profile by pulling their ProfilePath from the registry and adding it in front.
             //Add "defaultPaths.Add($@"{user.ProfilePath}" without the quotes in front of the file / path to be collected in each users profile.
             if (!Platform.IsUnixLike())
@@ -129,7 +168,84 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG1");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG2");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\WebCache\");
-							defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\History\");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\History\");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\History");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\History");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\History");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\History");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\History");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\History");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\History");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Cookies"); // Chrome Canary collection
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Local\ConnectedDevicesPlatform");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Windows\Recent");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Office\Recent");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Opera");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Terminal Server Client\Cache");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Mozilla\Firefox\Profiles");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\TeamViewer");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\winscp.rnd");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\winscp.ini");
+                            defaultPaths.Add($@"{User}\AppData\Local\Putty.rnd");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Edge\User Data\Default");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\AnyDesk\ad.trace"); // stores connecting IP and file transfer activity
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Edge\User Data\Default"); //updated Edge browser history
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\OneDrive\logs");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\OneDrive\logs");
+                        }
+                }
+
+                catch (Exception)
+                {
+                    //FAIL
+                }
+            }
+            if (!Platform.IsUnixLike())
+            {
+                try
+
+                {
+                    string UserPath = Arguments.DriveLet + "\\Windows.old\\Users\\";
+                    string[] WinUserFolders = Directory.GetDirectories(UserPath);
+                    if (Directory.Exists(UserPath))
+                        foreach (var User in WinUserFolders)
+                        {
+                            defaultPaths.Add($@"{User}\NTUSER.DAT");
+                            defaultPaths.Add($@"{User}\NTUSER.DAT.LOG1");
+                            defaultPaths.Add($@"{User}\NTUSER.DAT.LOG2");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG1");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG2");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\WebCache\");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\History\");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\History");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Cookies"); // add Chrome cookies
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Bookmarks"); // add Chrome Bookmarks
@@ -152,6 +268,7 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Roaming\winscp.ini");
                             defaultPaths.Add($@"{User}\AppData\Local\Putty.rnd");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Edge\User Data\Default");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\AnyDesk\ad.trace");
                         }
                 }
 
