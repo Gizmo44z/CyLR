@@ -70,18 +70,93 @@ $@"{Arguments.DriveLet}\Windows.old\System32\bits.log",
 $@"{Arguments.DriveLet}\Windows.old\System32\Tasks",
 $@"{Arguments.DriveLet}\Windows.old\System32\LogFiles\HTTPERR",
 $@"{Arguments.DriveLet}\Windows.old\System32\wbem\Repository",
-$@"{Arguments.DriveLet}\ProgramData\AnyDesk\ad_svc.trace",
+$@"{Arguments.DriveLet}\ProgramData\AnyDesk",
 $@"{Arguments.DriveLet}\Windows\System32\LogFiles\SUM",
 $@"{Arguments.DriveLet}\Windows.old\System32\LogFiles\SUM",
 $@"{Arguments.DriveLet}\kworking",
+$@"{Arguments.DriveLet}\ProgramData\Microsoft\Diagnosis\EventTranscript\EventTranscript.db",
+$@"{Arguments.DriveLet}\Windows\System32\debug\netlogon.log",
+$@"{Arguments.DriveLet}\ProgramData\LogMeIn\Logs",
+
+//AVG
+defaultPaths.Add($@"{Arguments.DriveLet}\Documents and Settings\All Users\Application Data\AVG\Antivirus\log");
+defaultPaths.Add($@"{Arguments.DriveLet}\Documents and Settings\All Users\Application Data\AVG\Antivirus\report");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\AVG\Antivirus\log");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\AVG\Antivirus\report");
+//Avast
+defaultPaths.Add($@"{Arguments.DriveLet}\Documents And Settings\All Users\Application Data\Avast Software\Avast\Log");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Avast Software\Avast\Log");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Avast Software\Avast\Chest\index.xml");
+//Avira
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Avira\Antivirus\LOGFILES");
+//Bitdefender
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Bitdefender\Endpoint Security\Logs");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Bitdefender\Desktop\Profiles\Logs");
+defaultPaths.Add($@"{Arguments.DriveLet}\ComboFix.txt");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\crs1\Logs");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\apv2\Logs");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\crb1\Logs");
+//ESET
+defaultPaths.Add($@"{Arguments.DriveLet}\Documents and Settings\All Users\Application Data\ESET\ESET NOD32 Antivirus\Logs");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\ESET\ESET NOD32 Antivirus\Logs");
+//F-Secure
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\F-Secure\Log");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\F-Secure\Antivirus\ScheduledScanReports");
+//Hitman Pro
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\HitmanPro\Logs");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\HitmanPro.Alert\Logs");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\HitmanPro.Alert\excalibur.db");
+//Malwarebytes
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Malwarebytes\Malwarebytes Anti-Malware\Logs");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Malwarebytes\MBAMService\logs\mbamservice.log");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Malwarebytes\MBAMService\ScanResults");
+//McAfee
+defaultPaths.Add($@"{Arguments.DriveLet}\Users\All Users\Application Data\McAfee\DesktopProtection");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\McAfee\DesktopProtection");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\McAfee\Endpoint Security\Logs");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\McAfee\Endpoint Security\Logs_Old");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Mcafee\VirusScan");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\McAfee\Endpoint Security\Logs");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\RogueKiller\logs");
+//SentinelOne
+defaultPaths.Add($@"{Arguments.DriveLet}\programdata\sentinel\logs");
+//Sophos
+defaultPaths.Add($@"{Arguments.DriveLet}\Documents and Settings\All Users\Application Data\Sophos");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos");
+//Symantec
+defaultPaths.Add($@"{Arguments.DriveLet}\Documents and Settings\All Users\Application Data\Symantec\Symantec Endpoint Protection\Logs\AV");
+defaultPaths.Add($@"{Arguments.DriveLet}\Documents and Settings\All Users\Application Data\Symantec\Symantec Endpoint Protection\Quarantine");
+//TotalAV
+defaultPaths.Add($@"{Arguments.DriveLet}\Program Files\TotalAV\logs");
+defaultPaths.Add($@"{Arguments.DriveLet}\Program Files (x86)\TotalAV\logs");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\TotalAV\logs");
+//TrendMicro
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Trend Micro");
+defaultPaths.Add($@"{Arguments.DriveLet}\Program Files\Trend Micro\Security Agent\Report");
+defaultPaths.Add($@"{Arguments.DriveLet}\Program Files (x86)\Trend Micro\Security Agent\Report");
+defaultPaths.Add($@"{Arguments.DriveLet}\Program Files\Trend Micro\Security Agent\ConnLog");
+defaultPaths.Add($@"{Arguments.DriveLet}\Program Files (x86)\Trend Micro\Security Agent\ConnLog");
+//VIPRE
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\VIPRE Business Agent\Logs");
+//Webroot
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\WRData\WRLog.log");
+//Defender
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Microsoft\Microsoft AntiMalware\Support");
+defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Microsoft\Windows Defender\Support");
+defaultPaths.Add($@"{Arguments.DriveLet}\Windows\Temp\MpCmdRun.log");
+defaultPaths.Add($@"{Arguments.DriveLet}\Windows.old\Windows\Temp\MpCmdRun.log");
+
 defaultPaths.Add($@"{User}\NTUSER.DAT");
 defaultPaths.Add($@"{User}\NTUSER.DAT.LOG1");
 defaultPaths.Add($@"{User}\NTUSER.DAT.LOG2");
 defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat");
 defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG1");
 defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG2");
-defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\WebCache\");
-defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\History\");
+defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\WebCache");
+defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\History");
+defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\Cookies");
+defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\IEDownloadHistory");
+defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\INetCookies");
 defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\History");
 defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Cookies");
 defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Bookmarks");
@@ -113,7 +188,7 @@ defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Boo
 defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Extensions");
 defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Shortcuts");
 defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\History");
-defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Cookies"); // Chrome Canary collection
+defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Cookies");
 defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Bookmarks");
 defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Extensions");
 defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Shortcuts");
@@ -122,32 +197,28 @@ defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadli
 defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Windows\Recent");
 defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Office\Recent");
 defaultPaths.Add($@"{User}\AppData\Roaming\Opera");
+defaultPaths.Add($@"{User}\AppData\Local\Opera Software\Opera Stable");
+defaultPaths.Add($@"{User}\AppData\Roaming\Opera Software\Opera Stable");
 defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Terminal Server Client\Cache");
 defaultPaths.Add($@"{User}\AppData\Roaming\Mozilla\Firefox\Profiles");
 defaultPaths.Add($@"{User}\AppData\Roaming\TeamViewer");
 defaultPaths.Add($@"{User}\AppData\Roaming\winscp.rnd");
 defaultPaths.Add($@"{User}\AppData\Roaming\winscp.ini");
 defaultPaths.Add($@"{User}\AppData\Local\Putty.rnd");
-defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Edge\User Data\Default");
+defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Edge\User Data");
+defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Internet Explorer");
+defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Internet Explorer");
 defaultPaths.Add($@"{User}\AppData\Roaming\AnyDesk\ad.trace"); // stores connecting IP and file transfer activity
-defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Edge\User Data\Default"); //updated Edge browser history
+defaultPaths.Add($@"{User}\AppData\Roaming\AnyDesk\Connection_trace.txt");
+defaultPaths.Add($@"{User}\AppData\Roaming\FileZilla");
 defaultPaths.Add($@"{User}\AppData\Local\Microsoft\OneDrive\logs");
 defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\OneDrive\logs");
-defaultPaths.Add($@"{User2k3}\NTUSER.DAT");
-defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG");
-defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG1");
-defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG2");
-defaultPaths.Add($@"{User2k3}\Recent\");
-defaultPaths.Add($@"{User2k3}\PrivacIE\");
-defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Microsoft\Windows\UsrClass.dat");
-defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Microsoft\Windows\UsrClass.dat.LOG");
-defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Microsoft\Windows\UsrClass.dat.LOG1");
-defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Microsoft\Windows\UsrClass.dat.LOG2");
-defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Microsoft\Terminal Server Client\");
-defaultPaths.Add($@"{User2k3}\Local Settings\History\History.IE5\");
-defaultPaths.Add($@"{User2k3}\Local Settings\Microsoft\Windows\WebCache\");
-defaultPaths.Add($@"{User2k3}\Local Settings\Microsoft\Windows\History\");
-defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Google\Chrome\User Data\Default\History\");
-defaultPaths.Add($@"{User2k3}\Application Data\Opera\");
-defaultPaths.Add($@"{User2k3}\Application Data\Mozilla\Firefox\Profiles\");
-defaultPaths.Add($@"{User2k3}\Application Data\TeamViewer");
+defaultPaths.Add($@"{User}\Avast Software\Avast\Log");
+defaultPaths.Add($@"{User}\AppData\Local\F-Secure\Log");
+defaultPaths.Add($@"{User}\AppData\Roaming\Malwarebytes\Malwarebytes Anti-Malware\Logs");
+defaultPaths.Add($@"{User}\AppData\Roaming\SUPERAntiSpyware\Logs");
+defaultPaths.Add($@"{User}\AppData\Local\Symantec\Symantec Endpoint Protection\Logs");
+defaultPaths.Add($@"{User}\AppData\Roaming\VIPRE Business");
+defaultPaths.Add($@"{User}\AppData\Roaming\GFI Software\AntiMalware\Logs");
+defaultPaths.Add($@"{User}\AppData\Roaming\Sunbelt Software\AntiMalware\Logs");
+defaultPaths.Add($@"{User}\AppData\Local\temp\LogMeInLogs");
