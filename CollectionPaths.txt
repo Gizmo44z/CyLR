@@ -79,6 +79,10 @@ $@"{Arguments.DriveLet}\kworking",
 $@"{Arguments.DriveLet}\ProgramData\Microsoft\Diagnosis\EventTranscript\EventTranscript.db",
 $@"{Arguments.DriveLet}\Windows\System32\debug\netlogon.log",
 $@"{Arguments.DriveLet}\ProgramData\LogMeIn\Logs",
+$@"{Arguments.DriveLet}\Program Files (x86)\Splashtop\Splashtop Remote\Server\log",
+$@"{Arguments.DriveLet}\Program Files\Splashtop\Splashtop Remote\Server\log",
+$@"{Arguments.DriveLet}\Program Files (x86)\Splashtop\Splashtop Remote\Splashtop Gateway\log",
+$@"{Arguments.DriveLet}\Program Files\Splashtop\Splashtop Remote\Splashtop Gateway\log",
 
 //AVG
 defaultPaths.Add($@"{Arguments.DriveLet}\Documents and Settings\All Users\Application Data\AVG\Antivirus\log");
