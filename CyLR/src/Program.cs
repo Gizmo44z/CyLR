@@ -9,6 +9,7 @@ using CyLR.src.read;
 using Renci.SshNet;
 using ArchiveFile = CyLR.archive.File;
 using File = System.IO.File;
+using System.Threading.Tasks;
 
 
 namespace CyLR
@@ -54,7 +55,7 @@ namespace CyLR
             List<string> paths;
             try
             {
-                paths = CollectionPaths.GetPaths(arguments, additionalPaths, arguments.Usnjrnl);
+                paths = CollectionPaths.GetPaths(arguments, additionalPaths, arguments.Usnjrnl, arguments.AntiV);
             }
             catch (Exception e)
             {
@@ -66,21 +67,43 @@ namespace CyLR
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
+            //try
+            //{
+            //    var archiveStream = Stream.Null;
+            //    if (!arguments.DryRun)
+            //    {
+            //        var outputPath = $@"{arguments.OutputPath}/{arguments.OutputFileName}";
+            //        if (arguments.UseSftp)
+            //        {
+            //            var client = CreateSftpClient(arguments);
+            //            archiveStream = client.Create(outputPath);
+            //        }
+            //        else
+            //        {
+            //            archiveStream = OpenFileStream(outputPath);
+            //        }
+            //    }
+            //    using (archiveStream)
+            //    {
+            //        CreateArchive(arguments, archiveStream, paths);
+            //    }
+
+            //    stopwatch.Stop();
+            //    Console.WriteLine("Extraction complete. {0} elapsed", new TimeSpan(stopwatch.ElapsedTicks).ToString("g"));
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.Error.WriteLine($"Error occured while collecting files:\n{e}");
+            //    return 1;
+            //}
+            //return 0;
             try
             {
                 var archiveStream = Stream.Null;
+                var outputPath = $@"{arguments.OutputPath}/{arguments.OutputFileName}";
                 if (!arguments.DryRun)
                 {
-                    var outputPath = $@"{arguments.OutputPath}/{arguments.OutputFileName}";
-                    if (arguments.UseSftp)
-                    {
-                        var client = CreateSftpClient(arguments);
-                        archiveStream = client.Create(outputPath);
-                    }
-                    else
-                    {
-                        archiveStream = OpenFileStream(outputPath);
-                    }
+                    archiveStream = OpenFileStream(outputPath);
                 }
                 using (archiveStream)
                 {
@@ -88,11 +111,17 @@ namespace CyLR
                 }
 
                 stopwatch.Stop();
-                Console.WriteLine("Extraction complete. {0} elapsed", new TimeSpan(stopwatch.ElapsedTicks).ToString("g"));
+
+                if (arguments.UseSftp)
+                {
+                    // Attempt upload of SFTP.
+                    Console.WriteLine($"Attempting to upload to SFTP.");
+                    SFTPUpload(arguments, outputPath);
+                }
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine($"Error occured while collecting files:\n{e}");
+                Console.WriteLine($"Upload failed. Please upload the local zip collection manually.");
                 return 1;
             }
             return 0;
@@ -149,6 +178,93 @@ namespace CyLR
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// <summary>
+        /// Handle the connection to the SFTP server and uploading the resulting
+        /// archive file. In the case the upload fails, this method will attempt
+        /// to re-upload 3 times, with a 30 second pause between to allow time
+        /// for the network to become more stable. If the upload is successful,
+        /// the resulting archive file will be removed from the system - unless
+        /// the user specified <c>--no-sftpcleanup</c> at invocation.
+        /// </summary>
+        /// <param name="arguments">User specified arguments with SFTP and other details</param>
+        /// <param name="outputPath">Path to the archive file to upload</param>
+        /// <param name="logger">Logging object</param>
+        private static void SFTPUpload(Arguments arguments, string outputPath)
+        {
+            bool successfulUpload = false;
+            int max_tries = 3;
+            int num_tries = 0;
+            while (!successfulUpload && (num_tries < max_tries))
+            {
+                bool attemptSuccess = false;
+                try
+                {
+
+                    var sftpStream = Stream.Null;
+                    var client = CreateSftpClient(arguments);
+                    sftpStream = client.Create($@"{arguments.SFTPOutputPath}/{arguments.OutputFileName}");
+
+                    const int bufferSize = 1048576;
+                    byte[] buffer = new byte[1048576];
+                    int readSize = -1;
+                    ulong amountCopied = 0;
+                    ulong pctComplete = 0;
+
+                    using (sftpStream)
+                    using (FileStream sr = File.OpenRead(outputPath))
+                    {
+                        do
+                        {
+                            readSize = sr.Read(buffer, 0, bufferSize);
+                            if (readSize > 0)
+                            {
+                                sftpStream.Write(buffer, 0, readSize);
+                            }
+                            amountCopied += (ulong)readSize;
+                            if (readSize > 0 && (amountCopied % (1048576 * 50)) == 0)
+                            {
+                                pctComplete = ((ulong)amountCopied * 100) / (ulong)sr.Length;
+                            }
+                        } while (readSize > 0);
+                        if (readSize > 0 && (amountCopied % (1048576 * 50)) == 0)
+                        {
+                            pctComplete = ((ulong)amountCopied * 100) / (ulong)sr.Length;
+                        }
+                    }
+                    attemptSuccess = true;
+
+                    Task.Factory.StartNew(() => {
+                        client.Dispose();
+                    });
+
+                }
+                catch
+                {
+                    num_tries++;
+                    System.Threading.Thread.Sleep(30 * 1000);
+                }
+
+                if (attemptSuccess)
+                {
+                    successfulUpload = true;
+                    Console.WriteLine("Upload complete.");
+                    if (arguments.SFTPCleanUp)
+                    {
+                        File.Delete(outputPath);
+                    }
+                    Console.WriteLine("Removed local zip file collection.");
+
+                }
+
+            }
+            if (!successfulUpload)
+            {
+                Console.WriteLine("Unable to upload to SFTP. Zip file not removed. Please upload through another manner.");
+            }
+
         }
 
         /// <summary>

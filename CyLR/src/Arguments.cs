@@ -53,6 +53,10 @@ namespace CyLR
             {
                 "-usnjrnl",
                 "Collects $UsnJrnl"
+            },
+            {
+                "-av",
+                "Collects anti-virus logs"
             }
         };
 
@@ -73,6 +77,10 @@ namespace CyLR
         public readonly string ZipPassword;
         public readonly bool Usnjrnl = false;
         public static string DriveLet = "C:";
+        public readonly bool AntiV = false;
+        public readonly string SFTPOutputPath = ".";
+        public readonly bool SFTPCleanUp = true;
+        public readonly string varSFTP = string.Empty;
 
         public Arguments(IEnumerable<string> args)
         {
@@ -121,7 +129,19 @@ namespace CyLR
                     case "-usnjrnl":
                         Usnjrnl = true;
                         break;
-                       
+                    
+                    case "--no-sftpcleanup":
+                        SFTPCleanUp = false;
+                        break;
+
+                    case "-os":
+                        SFTPOutputPath = argEnum.GetArgumentParameter();
+                        break;
+
+                    case "-av":
+                        AntiV = true;
+                        break;
+
                     case "--force-native":
                         if (ForceNative)
                         {
