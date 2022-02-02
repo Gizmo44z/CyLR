@@ -69,12 +69,6 @@ namespace CyLR
                 $@"{Arguments.DriveLet}\System Volume Information\syscache.hve.LOG1",
                 $@"{Arguments.DriveLet}\System Volume Information\syscache.hve.LOG2",
                 $@"{Arguments.DriveLet}\ProgramData\Microsoft\Network\Downloader\",
-                $@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos File Scanner\Logs\",
-                $@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Device Control\logs\",
-                $@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Data Control\logs",
-                $@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Anti-Virus\logs",
-                $@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Tamper Protection\logs",
-                $@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Network Threat Protection\Logs",
                 $@"{Arguments.DriveLet}\Windows\System32\bits.log",
                 $@"{Arguments.DriveLet}\Windows\System32\Tasks",
                 $@"{Arguments.DriveLet}\inetpub\logs\LogFiles",
@@ -119,6 +113,7 @@ namespace CyLR
                 $@"{Arguments.DriveLet}\Program Files\Splashtop\Splashtop Remote\Server\log",
                 $@"{Arguments.DriveLet}\Program Files (x86)\Splashtop\Splashtop Remote\Splashtop Gateway\log",
                 $@"{Arguments.DriveLet}\Program Files\Splashtop\Splashtop Remote\Splashtop Gateway\log",
+                $@"{Arguments.DriveLet}\ProgramData\Microsoft\Windows Defender\Support",
 
             };
 
@@ -174,6 +169,13 @@ namespace CyLR
                 //Sophos
                 defaultPaths.Add($@"{Arguments.DriveLet}\Documents and Settings\All Users\Application Data\Sophos");
                 defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos");
+                defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos File Scanner\Logs\");
+                defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Device Control\logs\");
+                defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Data Control\logs");
+                defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Anti-Virus\logs");
+                defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Tamper Protection\logs");
+                defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Sophos\Sophos Network Threat Protection\Logs");
+
                 //Symantec
                 defaultPaths.Add($@"{Arguments.DriveLet}\Documents and Settings\All Users\Application Data\Symantec\Symantec Endpoint Protection\Logs\AV");
                 defaultPaths.Add($@"{Arguments.DriveLet}\Documents and Settings\All Users\Application Data\Symantec\Symantec Endpoint Protection\Quarantine");
@@ -193,7 +195,6 @@ namespace CyLR
                 defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\WRData\WRLog.log");
                 //Defender
                 defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Microsoft\Microsoft AntiMalware\Support");
-                defaultPaths.Add($@"{Arguments.DriveLet}\ProgramData\Microsoft\Windows Defender\Support");
                 defaultPaths.Add($@"{Arguments.DriveLet}\Windows\Temp\MpCmdRun.log");
                 defaultPaths.Add($@"{Arguments.DriveLet}\Windows.old\Windows\Temp\MpCmdRun.log");
             }
@@ -316,6 +317,7 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Roaming\GFI Software\AntiMalware\Logs");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Sunbelt Software\AntiMalware\Logs");
                             defaultPaths.Add($@"{User}\AppData\Local\temp\LogMeInLogs");
+                            defaultPaths.Add($@"{User}\AppData\Local\Mega Limited\MEGAsync\logs");
                         }
                 }
 
@@ -410,6 +412,7 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Roaming\GFI Software\AntiMalware\Logs");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Sunbelt Software\AntiMalware\Logs");
                             defaultPaths.Add($@"{User}\AppData\Local\temp\LogMeInLogs");
+                            defaultPaths.Add($@"{User}\AppData\Local\Mega Limited\MEGAsync\logs");
                         }
                 }
 
@@ -445,7 +448,7 @@ namespace CyLR
                             defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Google\Chrome\User Data\Default\History\");
                             defaultPaths.Add($@"{User2k3}\Application Data\Opera\");
                             defaultPaths.Add($@"{User2k3}\Application Data\Mozilla\Firefox\Profiles\");
-                            defaultPaths.Add($@"{User2k3}\Application Data\TeamViewer");
+                            defaultPaths.Add($@"{User2k3}\Application Data\TeamViewer\");
                         }
                 }
 
