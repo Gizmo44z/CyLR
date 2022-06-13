@@ -8,7 +8,7 @@ namespace CyLR.archive
     {
         private readonly ZipOutputStream archive;
 
-        public SharpZipArchive(Stream destination, String password)
+        public SharpZipArchive(Stream destination, String password, String level)
             : base(destination)
         {
             archive = new ZipOutputStream(destination);
@@ -17,7 +17,10 @@ namespace CyLR.archive
             {
                 archive.Password = password;
             }
-            
+            if (Convert.ToInt32(level) >= 1 || Convert.ToInt32(level) <= 9)
+            {
+                archive.SetLevel(Convert.ToInt32(level));
+            }
         }
 
         protected override void WriteStreamToArchive(string entryName, Stream stream, DateTimeOffset timestamp)
