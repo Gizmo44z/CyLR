@@ -47,6 +47,10 @@ namespace CyLR
                 "Uses a password to encrypt the archive file"
             },
             {
+                "-zl",
+                "Uses a number between 1-9 to change the compression level of the archive file"
+            },
+            {
                 "-dl",
                 "Specifies Drive Letter you want to collect from."
             },
@@ -57,6 +61,10 @@ namespace CyLR
             {
                 "-av",
                 "Collects anti-virus logs"
+            },
+            {
+                "-nohash",
+                "Skips hashing select files"
             }
         };
 
@@ -75,12 +83,14 @@ namespace CyLR
         public readonly bool DryRun;
         public readonly bool ForceNative;
         public readonly string ZipPassword;
+        public readonly string ZipLevel;
         public readonly bool Usnjrnl = false;
         public static string DriveLet = "C:";
         public readonly bool AntiV = false;
         public readonly string SFTPOutputPath = ".";
         public readonly bool SFTPCleanUp = true;
         public readonly string varSFTP = string.Empty;
+        public readonly bool hash = true;
 
         public Arguments(IEnumerable<string> args)
         {
@@ -140,6 +150,10 @@ namespace CyLR
 
                     case "-av":
                         AntiV = true;
+                        break;
+
+                    case "-nohash":
+                        hash = false;
                         break;
 
                     case "--force-native":

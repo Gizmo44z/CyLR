@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 using Microsoft.Win32;
+using System.Security.Cryptography;
 
 namespace CyLR
 {
@@ -32,10 +33,11 @@ namespace CyLR
                 yield return proc.StandardOutput.ReadLine();
             };
         }
-        public static List<string> GetPaths(Arguments arguments, List<string> additionalPaths, bool Usnjrnl, bool AntiV)
+        public static List<string> GetPaths(Arguments arguments, List<string> additionalPaths, bool Usnjrnl, bool AntiV, bool Hash)
         {
             var defaultPaths = new List<string>
             {
+
                 $@"{Arguments.DriveLet}\Windows\SchedLgU.Txt",
                 $@"{Arguments.DriveLet}\Windows\Tasks",
                 $@"{Arguments.DriveLet}\Windows\Prefetch",
@@ -51,7 +53,17 @@ namespace CyLR
                 $@"{Arguments.DriveLet}\Windows\System32\winevt\logs",
                 $@"{Arguments.DriveLet}\Windows\System32\Tasks",
                 $@"{Arguments.DriveLet}\Windows\System32\LogFiles\W3SVC1",
-                $@"{Arguments.DriveLet}\Windows\System32\config\",
+                $@"{Arguments.DriveLet}\Windows\System32\config\RegBack",
+                $@"{Arguments.DriveLet}\Windows\System32\config\userdiff",
+                $@"{Arguments.DriveLet}\Windows\System32\config\userdiff.LOG1",
+                $@"{Arguments.DriveLet}\Windows\System32\config\userdiff.LOG2",
+                $@"{Arguments.DriveLet}\Windows\System32\config\DRIVERS",
+                $@"{Arguments.DriveLet}\Windows\System32\config\DRIVERS.LOG1",
+                $@"{Arguments.DriveLet}\Windows\System32\config\DRIVERS.LOG2",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SAM",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SYSTEM",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SOFTWARE",
+                $@"{Arguments.DriveLet}\Windows\System32\config\SECURITY",
                 $@"{Arguments.DriveLet}\Windows\System32\config\SAM.LOG1",
                 $@"{Arguments.DriveLet}\Windows\System32\config\SYSTEM.LOG1",
                 $@"{Arguments.DriveLet}\Windows\System32\config\SOFTWARE.LOG1",
@@ -89,8 +101,19 @@ namespace CyLR
                 $@"{Arguments.DriveLet}\Windows.old\System32\winevt\logs",
                 $@"{Arguments.DriveLet}\Windows.old\System32\Tasks",
                 $@"{Arguments.DriveLet}\Windows.old\System32\LogFiles\W3SVC1",
-                $@"{Arguments.DriveLet}\Windows.old\System32\config\",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\RegBack",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\userdiff",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\userdiff.LOG1",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\userdiff.LOG2",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\DRIVERS",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\DRIVERS.LOG1",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\DRIVERS.LOG2",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\SAM",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\SYSTEM",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\SOFTWARE",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\SECURITY",
                 $@"{Arguments.DriveLet}\Windows.old\System32\config\SAM.LOG1",
+                $@"{Arguments.DriveLet}\Windows.old\System32\config\SYSTEM.LOG1",
                 $@"{Arguments.DriveLet}\Windows.old\System32\config\SOFTWARE.LOG1",
                 $@"{Arguments.DriveLet}\Windows.old\System32\config\SECURITY.LOG1",
                 $@"{Arguments.DriveLet}\Windows.old\System32\config\SAM.LOG2",
@@ -108,7 +131,7 @@ namespace CyLR
                 $@"{Arguments.DriveLet}\kworking",
                 $@"{Arguments.DriveLet}\ProgramData\Microsoft\Diagnosis\EventTranscript\EventTranscript.db",
                 $@"{Arguments.DriveLet}\Windows\System32\debug\netlogon.log",
-                $@"{Arguments.DriveLet}\ProgramData\LogMeIn\Logs",
+                $@"{Arguments.DriveLet}\ProgramData\LogMeIn",
                 $@"{Arguments.DriveLet}\Program Files (x86)\Splashtop\Splashtop Remote\Server\log",
                 $@"{Arguments.DriveLet}\Program Files\Splashtop\Splashtop Remote\Server\log",
                 $@"{Arguments.DriveLet}\Program Files (x86)\Splashtop\Splashtop Remote\Splashtop Gateway\log",
@@ -222,6 +245,101 @@ namespace CyLR
                 }
             }
 
+            //Will hash select files on the drive letter provided and add to a file called EXEHash.txt
+            if (Hash == true)
+            {
+                try
+                {
+
+                    var pathadd = new List<string>();
+                    
+
+                    string[] wexe = Directory.GetFiles($@"{Arguments.DriveLet}\Windows", "*.exe", SearchOption.TopDirectoryOnly);
+                    pathadd.AddRange(wexe);
+                    string[] progexe = Directory.GetFiles($@"{Arguments.DriveLet}\ProgramData", "*.exe", SearchOption.TopDirectoryOnly);
+                    pathadd.AddRange(progexe);
+                    string[] rootexe = Directory.GetFiles($@"{Arguments.DriveLet}\", "*.exe", SearchOption.TopDirectoryOnly);
+                    pathadd.AddRange(rootexe);
+
+                    string[] wdll = Directory.GetFiles($@"{Arguments.DriveLet}\Windows", "*.dll", SearchOption.TopDirectoryOnly);
+                    pathadd.AddRange(wdll);
+                    string[] progdll = Directory.GetFiles($@"{Arguments.DriveLet}\ProgramData", "*.dll", SearchOption.TopDirectoryOnly);
+                    pathadd.AddRange(progdll);
+                    string[] rootdll = Directory.GetFiles($@"{Arguments.DriveLet}\", "*.dll", SearchOption.TopDirectoryOnly);
+                    pathadd.AddRange(rootdll);
+
+
+                    string[] uexes = Directory.GetFiles(
+                        $@"{Arguments.DriveLet}\Users",
+                        "*.exe",
+
+                        new EnumerationOptions
+                        {
+                            RecurseSubdirectories = true
+                        });
+                    foreach (var file in uexes)
+                    {
+                        pathadd.Add(file);
+                    }
+
+                    string[] perfexes = Directory.GetFiles(
+                        $@"{Arguments.DriveLet}\perflogs",
+                        "*.exe",
+
+                        new EnumerationOptions
+                        {
+                            RecurseSubdirectories = true
+                        });
+                    foreach (var file in perfexes)
+                    {
+                        pathadd.Add(file);
+                    }
+
+                    string[] udll = Directory.GetFiles(
+                        $@"{Arguments.DriveLet}\Users",
+                        "*.dll",
+
+                        new EnumerationOptions
+                        {
+                            RecurseSubdirectories = true
+                        });
+                    foreach (var file in udll)
+                    {
+                        pathadd.Add(file);
+                    }
+
+                    string[] perfdll = Directory.GetFiles(
+                        $@"{Arguments.DriveLet}\perflogs",
+                        "*.dll",
+
+                        new EnumerationOptions
+                        {
+                            RecurseSubdirectories = true
+                        });
+                    foreach (var file in perfdll)
+                    {
+                        pathadd.Add(file);
+                    }
+
+                    foreach (var file in pathadd)
+                    {
+                        FileStream fop = File.OpenRead(file);
+                        string chksumSHA1 = BitConverter.ToString(System.Security.Cryptography.SHA1.Create().ComputeHash(fop));
+                        string chksum256 = BitConverter.ToString(System.Security.Cryptography.SHA256.Create().ComputeHash(fop));
+                        string[] lines = { $@"{file}" + "   " + $@"{chksumSHA1.Replace("-", string.Empty)}" + "   " + $@"{chksum256.Replace("-", string.Empty)}"};
+                        
+                        File.AppendAllLines(Path.Combine(@"C:\", "EXEHash.txt"), lines);
+
+                    }
+                    defaultPaths.Add(@"C:\EXEHash.txt");
+                    
+                }
+                catch (FileNotFoundException)
+                {
+                    //FAIL
+                }
+            }
+
             //If -dl switch is used against something other than "C:", only the drive letter variable MFT will be collected.
             if (Arguments.DriveLet != "C:")
             {
@@ -238,10 +356,13 @@ namespace CyLR
 
                 {
                     string UserPath = Arguments.DriveLet + "\\Users\\";
+                    string I30var = Arguments.DriveLet;
                     string[] WinUserFolders = Directory.GetDirectories(UserPath);
+         
                     if (Directory.Exists(UserPath))
                         foreach (var User in WinUserFolders)
                         {
+
                             defaultPaths.Add($@"{User}\NTUSER.DAT");
                             defaultPaths.Add($@"{User}\NTUSER.DAT.LOG1");
                             defaultPaths.Add($@"{User}\NTUSER.DAT.LOG2");
@@ -255,31 +376,37 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\INetCookies");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\History");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Network\Cookies");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Bookmarks");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Extensions");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Shortcuts");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\History");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Network\Cookies");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Bookmarks");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Extensions");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Shortcuts");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\History");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Network\Cookies");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Bookmarks");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Extensions");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Shortcuts");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\History");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Network\Cookies");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Bookmarks");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Extensions");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Shortcuts");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\History");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\Network\Cookies");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\Bookmarks");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\Extensions");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\Shortcuts");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\History");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Network\Cookies");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Bookmarks");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Extensions");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Shortcuts");
@@ -308,6 +435,7 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Roaming\FileZilla");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\OneDrive\logs");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\OneDrive\logs");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\OneDrive\settings");
                             defaultPaths.Add($@"{User}\Avast Software\Avast\Log");
                             defaultPaths.Add($@"{User}\AppData\Local\F-Secure\Log");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Malwarebytes\Malwarebytes Anti-Malware\Logs");
@@ -318,7 +446,59 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Roaming\Sunbelt Software\AntiMalware\Logs");
                             defaultPaths.Add($@"{User}\AppData\Local\temp\LogMeInLogs");
                             defaultPaths.Add($@"{User}\AppData\Local\Mega Limited\MEGAsync\logs");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\Clipboard");
+                            defaultPaths.Add(@"C:\EXEHash.txt");
                         }
+
+                }
+
+                catch (Exception)
+                {
+                    //FAIL
+                }
+            }
+            
+            if (!Platform.IsUnixLike())
+            {
+                try
+                {
+
+                    string Fol = $@"{Arguments.DriveLet}\ProgramData\VMware\VDM\Logs\";
+                    string[] vdifol = Directory.GetFiles(Fol, "debug-*", SearchOption.TopDirectoryOnly);
+                    if (Directory.Exists(Fol))
+                        foreach (var file in vdifol)
+                        {
+                            defaultPaths.Add($@"{file}");
+                        }
+                    
+                    string[] rcloneFol = Directory.GetFiles(
+                        $@"{Arguments.DriveLet}\",
+                        "rclone.conf",
+
+                        new EnumerationOptions
+                        {
+                            RecurseSubdirectories = true
+
+                        });
+                    foreach (var file in rcloneFol)
+                    {
+                        defaultPaths.Add($@"{file}");
+                    }
+
+                    string[] filezFol = Directory.GetFiles(
+                        $@"{Arguments.DriveLet}\",
+                        "filezilla.xml",
+
+                        new EnumerationOptions
+                        {
+                            RecurseSubdirectories = true
+
+                        });
+                    foreach (var file in filezFol)
+                    {
+                        defaultPaths.Add($@"{file}");
+                    } 
+                    
                 }
 
                 catch (Exception)
@@ -413,6 +593,7 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Roaming\Sunbelt Software\AntiMalware\Logs");
                             defaultPaths.Add($@"{User}\AppData\Local\temp\LogMeInLogs");
                             defaultPaths.Add($@"{User}\AppData\Local\Mega Limited\MEGAsync\logs");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\Clipboard");
                         }
                 }
 

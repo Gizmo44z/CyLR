@@ -53,9 +53,15 @@ namespace CyLR
 
 
             List<string> paths;
+            List<string> nodupes;
             try
             {
-                paths = CollectionPaths.GetPaths(arguments, additionalPaths, arguments.Usnjrnl, arguments.AntiV);
+                
+                paths = CollectionPaths.GetPaths(arguments, additionalPaths, arguments.Usnjrnl, arguments.AntiV, arguments.hash);
+                nodupes = new HashSet<string>(paths).ToList();
+
+                //unqpaths = paths.Distinct().ToList();
+                
             }
             catch (Exception e)
             {
@@ -67,6 +73,8 @@ namespace CyLR
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
+
+            //Legacy zip archiving code, does not attempt 3 time SFTP upload
             //try
             //{
             //    var archiveStream = Stream.Null;
@@ -97,6 +105,7 @@ namespace CyLR
             //    return 1;
             //}
             //return 0;
+
             try
             {
                 var archiveStream = Stream.Null;
@@ -107,7 +116,9 @@ namespace CyLR
                 }
                 using (archiveStream)
                 {
-                    CreateArchive(arguments, archiveStream, paths);
+                    //List<string> unpaths = paths.Distinct().ToList();
+                    CreateArchive(arguments, archiveStream, nodupes);
+                    File.Delete(@"C:\EXEHash.txt");
                 }
 
                 stopwatch.Stop();
@@ -119,7 +130,7 @@ namespace CyLR
                     SFTPUpload(arguments, outputPath);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Console.WriteLine($"Upload failed. Please upload the local zip collection manually.");
                 return 1;
@@ -137,7 +148,12 @@ namespace CyLR
         {
             try
             {
-                using (var archive = new SharpZipArchive(archiveStream, arguments.ZipPassword))
+                string ZipLevel = "3";
+                if (!String.IsNullOrEmpty(arguments.ZipLevel))
+                {
+                    ZipLevel = arguments.ZipLevel;
+                }
+                using (var archive = new SharpZipArchive(archiveStream, arguments.ZipPassword, ZipLevel))
                 {
                     var system = arguments.ForceNative ? (IFileSystem)new NativeFileSystem() : new RawFileSystem();
 
