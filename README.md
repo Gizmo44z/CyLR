@@ -73,6 +73,8 @@ Mac and Linux Default
     * SFTP upload method has been updated to use public release CyLR 3.0 where it will attempt to upload to SFTP 3x and if it fails, it will keep the file at the designated location.
 * '-c' — Optional argument to provide custom list of artifact files and directories (one entry per line). NOTE: Must use full path including drive letter on each line.  MFT can be collected by "C:\$MFT" or "D:\$MFT" and so on.  Usage: -c <path to config file>
  * '-dl' - Select drive letter to collect from (Default value is "C:").
+ * '-nohash' - Disables the hashing capabilities of exe and dll files in specific directories.
+ * '-usr' - specify a directory to collect user related artifacts if they are not stored in the default path (roaming user profiles, mounted VHDX user profiles, etc...). 
 
 
 ## DEPENDENCIES
