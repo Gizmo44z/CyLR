@@ -278,7 +278,7 @@ namespace CyLR
             }
             if (!successfulUpload)
             {
-                Console.WriteLine("Unable to upload to SFTP. Zip file not removed. Please upload through another manner.");
+                Console.WriteLine("Unable to upload to SFTP. Zip file not removed. Please upload another way.");
             }
 
         }
@@ -300,6 +300,20 @@ namespace CyLR
                 port = 22;
             }
 
+            // Will need lots of testing with making SSH key work. Below is a draft of making it work with CyLRUpload account.
+//            string privkey = @"-----BEGIN RSA PRIVATE KEY-----
+//CyLRUpload Account SSH Key
+//-----END RSA PRIVATE KEY-----";
+//            var keyfile = new PrivateKeyFile(privkey);
+//            var keyFiles = new[] { keyfile };
+//            var connectinfo = new ConnectionInfo(server[0], arguments.UserName,
+//                new PasswordAuthenticationMethod(arguments.UserName, arguments.UserPassword),
+//                new PrivateKeyAuthenticationMethod(arguments.UserName, keyFiles));
+//            using (var client = new SftpClient (ConnectionInfo))
+//            {
+//                client.Connect();
+//                return client;
+//            }
             var client = new SftpClient(server[0], port, arguments.UserName, arguments.UserPassword);
             client.Connect();
             return client;

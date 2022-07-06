@@ -63,6 +63,10 @@ namespace CyLR
                 "Collects anti-virus logs"
             },
             {
+                "-usr",
+                "Specifies additional directory where User profiles may be stored and collects normal user artifacts from that path. To use, provide the full path to the Users Profile folder (double quotes, if path contains a space) after the switch."
+            },
+            {
                 "-nohash",
                 "Skips hashing select files"
             }
@@ -91,6 +95,7 @@ namespace CyLR
         public readonly bool SFTPCleanUp = true;
         public readonly string varSFTP = string.Empty;
         public readonly bool hash = true;
+        public static string usr = string.Empty;
 
         public Arguments(IEnumerable<string> args)
         {
@@ -156,6 +161,10 @@ namespace CyLR
                         hash = false;
                         break;
 
+                    case "-usr":
+                        usr = argEnum.GetArgumentParameter();
+                        break;
+
                     case "--force-native":
                         if (ForceNative)
                         {
@@ -179,7 +188,8 @@ namespace CyLR
 
             if (!HelpRequested)
             {
-                var sftpArgs = new[] { UserName, UserPassword, SFTPServer };
+                //Removing "UserPassword" for SSH key testing***************************
+                var sftpArgs = new[] { UserName, SFTPServer };
                 UseSftp = sftpArgs.Any(arg => !string.IsNullOrEmpty(arg));
                 if (UseSftp && sftpArgs.Any(string.IsNullOrEmpty))
                 {

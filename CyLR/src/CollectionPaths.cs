@@ -223,6 +223,110 @@ namespace CyLR
             }
             defaultPaths = defaultPaths.Select(Environment.ExpandEnvironmentVariables).ToList();
 
+            
+            if (Arguments.usr != string.Empty)
+            {
+                try
+                {
+
+                    string[] CusUserFolders = Directory.GetDirectories(Arguments.usr);
+
+                    if (Directory.Exists(Arguments.usr))
+                        foreach (var User in CusUserFolders)
+                        {
+                            defaultPaths.Add($@"{User}\NTUSER.DAT");
+                            defaultPaths.Add($@"{User}\NTUSER.DAT.LOG1");
+                            defaultPaths.Add($@"{User}\NTUSER.DAT.LOG2");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG1");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG2");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\WebCache");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\History");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\IEDownloadHistory");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\INetCookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\History");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Network\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\History");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Network\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\History");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Network\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\History");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Network\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\History");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\Network\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 1\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\History");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Network\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Profile 2\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\History");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Cookies");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Bookmarks");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Extensions");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome SxS\User Data\Default\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Local\ConnectedDevicesPlatform");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Windows\Recent");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Office\Recent");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Opera");
+                            defaultPaths.Add($@"{User}\AppData\Local\Opera Software\Opera Stable");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Opera Software\Opera Stable");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Terminal Server Client\Cache");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Mozilla\Firefox\Profiles");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\TeamViewer");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\winscp.rnd");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\winscp.ini");
+                            defaultPaths.Add($@"{User}\AppData\Local\Putty.rnd");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Edge\User Data");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Internet Explorer");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Internet Explorer");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\AnyDesk"); // stores connecting IP and file transfer activity
+                            defaultPaths.Add($@"{User}\AppData\Roaming\FileZilla");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\OneDrive\logs");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\OneDrive\logs");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\OneDrive\settings");
+                            defaultPaths.Add($@"{User}\Avast Software\Avast\Log");
+                            defaultPaths.Add($@"{User}\AppData\Local\F-Secure\Log");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Malwarebytes\Malwarebytes Anti-Malware\Logs");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\SUPERAntiSpyware\Logs");
+                            defaultPaths.Add($@"{User}\AppData\Local\Symantec\Symantec Endpoint Protection\Logs");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\VIPRE Business");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\GFI Software\AntiMalware\Logs");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Sunbelt Software\AntiMalware\Logs");
+                            defaultPaths.Add($@"{User}\AppData\Local\temp\LogMeInLogs");
+                            defaultPaths.Add($@"{User}\AppData\Local\Mega Limited\MEGAsync\logs");
+                            defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\Clipboard");
+                            defaultPaths.Add($@"{User}\Citrix WEM Agent.log");
+                            defaultPaths.Add($@"{User}\Citrix WEM Agent Init.log");
+                        }
+                }
+                catch (Exception)
+                {
+                    //FAIL
+                }
+            }
             //This will collect all fixed drive MFT files if you did not select a specific mounted drive to collect from.
             //Use with -dl if you only want a specific drive collected rather than all fixed drives on a system.
             if (Arguments.DriveLet == "C:")
@@ -246,6 +350,7 @@ namespace CyLR
             }
 
             //Will hash select files on the drive letter provided and add to a file called EXEHash.txt
+            
             if (Hash == true)
             {
                 try
@@ -260,7 +365,7 @@ namespace CyLR
                     pathadd.AddRange(progexe);
                     string[] rootexe = Directory.GetFiles($@"{Arguments.DriveLet}\", "*.exe", SearchOption.TopDirectoryOnly);
                     pathadd.AddRange(rootexe);
-
+                    
                     string[] wdll = Directory.GetFiles($@"{Arguments.DriveLet}\Windows", "*.dll", SearchOption.TopDirectoryOnly);
                     pathadd.AddRange(wdll);
                     string[] progdll = Directory.GetFiles($@"{Arguments.DriveLet}\ProgramData", "*.dll", SearchOption.TopDirectoryOnly);
@@ -268,8 +373,9 @@ namespace CyLR
                     string[] rootdll = Directory.GetFiles($@"{Arguments.DriveLet}\", "*.dll", SearchOption.TopDirectoryOnly);
                     pathadd.AddRange(rootdll);
 
-
-                    string[] uexes = Directory.GetFiles(
+                    if (Directory.Exists($@"{Arguments.DriveLet}\Users"))
+                    {
+                        string[] uexes = Directory.GetFiles(
                         $@"{Arguments.DriveLet}\Users",
                         "*.exe",
 
@@ -277,12 +383,30 @@ namespace CyLR
                         {
                             RecurseSubdirectories = true
                         });
-                    foreach (var file in uexes)
-                    {
-                        pathadd.Add(file);
-                    }
+                        foreach (var file in uexes)
+                        {
+                            pathadd.Add(file);
+                        }
 
-                    string[] perfexes = Directory.GetFiles(
+                        string[] udll = Directory.GetFiles(
+                        $@"{Arguments.DriveLet}\Users\",
+                        "*.dll",
+
+                        new EnumerationOptions
+                        {
+                            RecurseSubdirectories = true
+                        });
+                        foreach (var file in udll)
+                        {
+                            pathadd.Add(file);
+                        }
+                    }
+                    
+
+
+                    
+                        if (Directory.Exists($@"{Arguments.DriveLet}\perflogs"))
+                        { string[] perfexes = Directory.GetFiles(
                         $@"{Arguments.DriveLet}\perflogs",
                         "*.exe",
 
@@ -290,42 +414,39 @@ namespace CyLR
                         {
                             RecurseSubdirectories = true
                         });
-                    foreach (var file in perfexes)
+                            foreach (var file in perfexes)
+                            {
+                                pathadd.Add(file);
+                            }
+                        string[] perfdll = Directory.GetFiles(
+                    $@"{Arguments.DriveLet}\perflogs",
+                    "*.dll",
+
+                    new EnumerationOptions
                     {
-                        pathadd.Add(file);
-                    }
-
-                    string[] udll = Directory.GetFiles(
-                        $@"{Arguments.DriveLet}\Users",
-                        "*.dll",
-
-                        new EnumerationOptions
+                        RecurseSubdirectories = true
+                    });
+                        foreach (var file in perfdll)
                         {
-                            RecurseSubdirectories = true
-                        });
-                    foreach (var file in udll)
-                    {
-                        pathadd.Add(file);
+                            pathadd.Add(file);
+                        }
                     }
 
-                    string[] perfdll = Directory.GetFiles(
-                        $@"{Arguments.DriveLet}\perflogs",
-                        "*.dll",
-
-                        new EnumerationOptions
-                        {
-                            RecurseSubdirectories = true
-                        });
-                    foreach (var file in perfdll)
-                    {
-                        pathadd.Add(file);
-                    }
+                    //Removes select paths to prevent local downloads of syncing files
+                    pathadd.RemoveAll(u => u.Contains("OneDrive"));
+                    pathadd.RemoveAll(p => p.Contains("\\.nuget\\"));
+                    pathadd.RemoveAll(u => u.Contains("DropBox"));
+                    pathadd.RemoveAll(u => u.Contains("Google"));
+                    pathadd.RemoveAll(u => u.Contains("Sync"));
+                    pathadd.RemoveAll(u => u.Contains("Box"));
 
                     foreach (var file in pathadd)
                     {
-                        FileStream fop = File.OpenRead(file);
-                        string chksumSHA1 = BitConverter.ToString(System.Security.Cryptography.SHA1.Create().ComputeHash(fop));
-                        string chksum256 = BitConverter.ToString(System.Security.Cryptography.SHA256.Create().ComputeHash(fop));
+                        FileStream f1 = File.OpenRead(file);
+                        string chksumSHA1 = BitConverter.ToString(System.Security.Cryptography.SHA1.Create().ComputeHash(f1));
+                        FileStream f256 = File.OpenRead(file);
+                        string chksum256 = BitConverter.ToString(System.Security.Cryptography.SHA256.Create().ComputeHash(f256));
+
                         string[] lines = { $@"{file}" + "   " + $@"{chksumSHA1.Replace("-", string.Empty)}" + "   " + $@"{chksum256.Replace("-", string.Empty)}"};
                         
                         File.AppendAllLines(Path.Combine(@"C:\", "EXEHash.txt"), lines);
@@ -356,7 +477,6 @@ namespace CyLR
 
                 {
                     string UserPath = Arguments.DriveLet + "\\Users\\";
-                    string I30var = Arguments.DriveLet;
                     string[] WinUserFolders = Directory.GetDirectories(UserPath);
          
                     if (Directory.Exists(UserPath))
@@ -448,6 +568,8 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Local\Mega Limited\MEGAsync\logs");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\Clipboard");
                             defaultPaths.Add(@"C:\EXEHash.txt");
+                            defaultPaths.Add($@"{User}\Citrix WEM Agent.log");
+                            defaultPaths.Add($@"{User}\Citrix WEM Agent Init.log");
                         }
 
                 }
