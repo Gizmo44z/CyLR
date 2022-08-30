@@ -24,7 +24,7 @@ CyLR uses .NET Core and runs natively on Windows, Linux, and MacOS. Self contain
 ## SYNOPSIS
 
 ```
-CyLR.exe [--help] [-od] [-of] [-u] [-p] [-s] [-c] [-zp] [-dl] [--no-usnjrnl] [-av] [-nohash] [-usr] [-dl]
+CyLR.exe [--help] [-od] [-of] [-u] [-p] [-s] [-c] [-zp] [-dl] [-usnjrnl] [-av] [-nohash] [-usr] [-dl]
 ```
 
 ## DESCRIPTION
@@ -65,7 +65,6 @@ Mac and Linux Default
 * '-of' — Defines the name of the zip archive will be created. Defaults to host machine's name + date\time run.
 * '-zp' — If specified, the resulting zip file will be password protected with this password.
 * '-dl' -- Will specify which drive letter collection should be collected from (requires ":" to be used i.e. "D:").
-* '-mount' -- Will prevent MFT collection of all NTFS fixed drives and only collect the "-dl" variable.
 * SFTP Options
     * '-u' — SFTP username
     * '-p' — SFTP password
@@ -75,10 +74,11 @@ Mac and Linux Default
  * '-dl' - Select drive letter to collect from (Default value is "C:").
  * '-nohash' - Disables the hashing capabilities of exe and dll files in specific directories.
  * '-usr' - specify a directory to collect user related artifacts if they are not stored in the default path (roaming user profiles, mounted VHDX user profiles, etc...). 
+  * '-av' - Adds additional collection paths of anti-virus logs (not included by default due to potential size).
 
 
 ## DEPENDENCIES
-in general: some kind of administrative rights on the target (root, sudo, administrator,...).
+In general: some kind of administrative rights on the target (root, sudo, administrator,...).
 
 CyLR now uses .NET Core and now runs natively on Windows, Linux, and MacOS as a .NET Core app or a self contained executable.
 
@@ -115,7 +115,7 @@ Collect artifacts and send data to SFTP server 8.8.8.8
     CyLR.exe -u username -p password -s 8.8.8.8
     ```
 
-Collect artifacts, send data to SFTP server 8.8.8.8, and keep all artifacts in memory
+Collect artifacts on local disk and send data to SFTP server 8.8.8.8, local copy deleted, if successful
     ```
     CyLR.exe -u username -p password -s 8.8.8.8 -m
     ```
