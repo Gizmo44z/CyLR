@@ -57,7 +57,7 @@ namespace CyLR
             try
             {
                 
-                paths = CollectionPaths.GetPaths(arguments, additionalPaths, arguments.Usnjrnl, arguments.AntiV, arguments.hash);
+                paths = CollectionPaths.GetPaths(arguments, additionalPaths, arguments.Usnjrnl, arguments.AntiV, arguments.hash, arguments.noinet);
                 nodupes = new HashSet<string>(paths).ToList();
 
                 //unqpaths = paths.Distinct().ToList();
@@ -119,6 +119,7 @@ namespace CyLR
                     //List<string> unpaths = paths.Distinct().ToList();
                     CreateArchive(arguments, archiveStream, nodupes);
                     File.Delete(@"C:\EXEHash.txt");
+                    File.Delete(@"C:\SysInfo.txt");
                 }
 
                 stopwatch.Stop();

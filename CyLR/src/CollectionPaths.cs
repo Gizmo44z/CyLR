@@ -5,6 +5,7 @@ using System.Linq;
 using System.Diagnostics;
 using Microsoft.Win32;
 using System.Security.Cryptography;
+using Hyldahl.Hashing;
 
 namespace CyLR
 {
@@ -33,8 +34,10 @@ namespace CyLR
                 yield return proc.StandardOutput.ReadLine();
             };
         }
-        public static List<string> GetPaths(Arguments arguments, List<string> additionalPaths, bool Usnjrnl, bool AntiV, bool Hash)
+        public static List<string> GetPaths(Arguments arguments, List<string> additionalPaths, bool Usnjrnl, bool AntiV, bool Hash, bool noinet)
         {
+            File.Delete(@"C:\EXEHash.txt");
+            File.Delete(@"C:\SysInfo.txt");
             var defaultPaths = new List<string>
             {
 
@@ -52,6 +55,7 @@ namespace CyLR
                 $@"{Arguments.DriveLet}\Windows\System32\sru",
                 $@"{Arguments.DriveLet}\Windows\System32\winevt\logs",
                 $@"{Arguments.DriveLet}\Windows\System32\Tasks",
+                $@"{Arguments.DriveLet}\Windows\System32\Inetsrv\Config\applicationHost.Config",
                 $@"{Arguments.DriveLet}\Windows\System32\LogFiles\W3SVC1",
                 $@"{Arguments.DriveLet}\Windows\System32\config\RegBack",
                 $@"{Arguments.DriveLet}\Windows\System32\config\userdiff",
@@ -82,10 +86,10 @@ namespace CyLR
                 $@"{Arguments.DriveLet}\System Volume Information\syscache.hve.LOG2",
                 $@"{Arguments.DriveLet}\ProgramData\Microsoft\Network\Downloader\",
                 $@"{Arguments.DriveLet}\Windows\System32\bits.log",
-                $@"{Arguments.DriveLet}\Windows\System32\Tasks",
-                $@"{Arguments.DriveLet}\inetpub\logs\LogFiles",
+                $@"{Arguments.DriveLet}\Windows\System32\Tasks",      
                 $@"{Arguments.DriveLet}\Windows\System32\LogFiles\HTTPERR",
                 $@"{Arguments.DriveLet}\Windows\System32\wbem\Repository",
+                $@"{Arguments.DriveLet}\Windows\debug\NetSetup.LOG",
                 $@"{Arguments.DriveLet}\Windows.old\SchedLgU.Txt",
                 $@"{Arguments.DriveLet}\Windows.old\Tasks",
                 $@"{Arguments.DriveLet}\Windows.old\Prefetch",
@@ -137,8 +141,14 @@ namespace CyLR
                 $@"{Arguments.DriveLet}\Program Files (x86)\Splashtop\Splashtop Remote\Splashtop Gateway\log",
                 $@"{Arguments.DriveLet}\Program Files\Splashtop\Splashtop Remote\Splashtop Gateway\log",
                 $@"{Arguments.DriveLet}\ProgramData\Microsoft\Windows Defender\Support",
+                $@"{Arguments.DriveLet}\ProgramData\Syncro\logs",
 
             };
+
+            if (noinet == false)
+            {
+                defaultPaths.Add($@"{Arguments.DriveLet}\inetpub\logs\LogFiles");
+            }
 
             if (Usnjrnl == true)
             {
@@ -320,7 +330,34 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\Clipboard");
                             defaultPaths.Add($@"{User}\Citrix WEM Agent.log");
                             defaultPaths.Add($@"{User}\Citrix WEM Agent Init.log");
+                            defaultPaths.Add($@"{User}\AppData\Local\pCloud\wpflog.log");
                         }
+
+                    string[] pcldrive = Directory.GetFiles(
+                        $@"{Arguments.DriveLet}\Users\",
+                        "*pCloud_Drive_*",
+
+                        new EnumerationOptions
+                        {
+                            RecurseSubdirectories = true
+                        });
+                    foreach (var file in pcldrive)
+                    {
+                        defaultPaths.Add(file);
+                    }
+
+                    string[] pcldata = Directory.GetFiles(
+                    $@"{Arguments.DriveLet}\Users\",
+                    "*data.db*",
+
+                    new EnumerationOptions
+                    {
+                        RecurseSubdirectories = true
+                    });
+                    foreach (var file in pcldata)
+                    {
+                        defaultPaths.Add(file);
+                    }
                 }
                 catch (Exception)
                 {
@@ -342,6 +379,58 @@ namespace CyLR
                             defaultPaths.Add($@"{d.Name}$LogFile");
                         }
                     }
+                    
+                    //RegistryKey key = Registry.LocalMachine.OpenSubKey($@"SYSTEM\ControlSet001\Control\TimeZoneInformation");
+                    //string tz = (string)key.GetValue("TimeZoneKeyName");
+
+                    //RegistryKey keycn = Registry.LocalMachine.OpenSubKey($@"SYSTEM\ControlSet001\Control\ComputerName\ComputerName");
+                    //string cn = (string)keycn.GetValue("ComputerName");
+
+                    //RegistryKey keyid = Registry.LocalMachine.OpenSubKey($@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+                    //Int32 insd = (Int32)keyid.GetValue("InstallDate");
+                    //DateTimeOffset insdate = DateTimeOffset.FromUnixTimeSeconds(insd).UtcDateTime;
+
+                    //RegistryKey keywv = Registry.LocalMachine.OpenSubKey($@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+                    //string winv = (string)keywv.GetValue("ProductName");
+
+                    string strcommand = @"cmd.exe";
+                    string strparam = @" /c systeminfo | findstr /c:""Host Name"" /c:""OS Name"" /c:""Original Install Date"" /c:""System Boot Time"" /c:""Time Zone"" /c:""Domain"" /c:""Logon Server"" /c:""OS Version"" & ipconfig | findstr /c:""ipv4""";
+                    string ipcon = @" /c ipconfig | findstr /i ""ipv4""";
+
+                    System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
+                    pProcess.StartInfo.FileName = strcommand;
+                    pProcess.StartInfo.Arguments = strparam;
+
+                    pProcess.StartInfo.UseShellExecute = false;
+                    pProcess.StartInfo.RedirectStandardOutput = true;
+
+                    pProcess.Start();
+                    string strOutput = pProcess.StandardOutput.ReadToEnd();
+                    pProcess.WaitForExit();
+
+                    File.WriteAllText(@"C:\SysInfo.txt", strOutput);
+
+                    System.Diagnostics.Process ipproc = new System.Diagnostics.Process();
+
+                    ipproc.StartInfo.FileName = strcommand;
+                    ipproc.StartInfo.Arguments = ipcon;
+
+                    ipproc.StartInfo.UseShellExecute = false;
+                    ipproc.StartInfo.RedirectStandardOutput = true;
+
+                    ipproc.Start();
+                    string ipinf = ipproc.StandardOutput.ReadToEnd();
+                    ipproc.WaitForExit();
+                                        
+                    File.AppendAllText(@"C:\SysInfo.txt", ipinf);
+                    File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "Times are in LOCAL drive collection format" + Environment.NewLine + "CyLR Version 2022.09.29");
+
+
+                    //string[] sysinfo = { cn + Environment.NewLine + winv + Environment.NewLine + Environment.OSVersion + Environment.NewLine + tz + 
+                    //        Environment.NewLine + insdate + Environment.NewLine + "CyLR version 2022.09.29" + Environment.NewLine + Environment.NewLine + strOutput};
+
+
+                    defaultPaths.Add(@"C:\SysInfo.txt");
                 }
                 catch (FileNotFoundException)
                 {
@@ -355,6 +444,18 @@ namespace CyLR
             {
                 try
                 {
+
+                    // Need to identify way to hash processes. Temp fix would be to invoke PowerShell.
+                    //Process[] processlist = Process.GetProcesses();
+                    //foreach (Process process in processlist)
+                    //{
+
+                    //    var proc = process.GetHashCode();
+
+                    //    string[] lines = { $@"{process}" + "|" + $@"{proc}" };
+
+                    //    File.AppendAllLines(Path.Combine(@"C:\", "prochash.txt"), lines);
+                    //}
 
                     var pathadd = new List<string>();
                     
@@ -372,6 +473,7 @@ namespace CyLR
                     pathadd.AddRange(progdll);
                     string[] rootdll = Directory.GetFiles($@"{Arguments.DriveLet}\", "*.dll", SearchOption.TopDirectoryOnly);
                     pathadd.AddRange(rootdll);
+
 
                     if (Directory.Exists($@"{Arguments.DriveLet}\Users"))
                     {
@@ -400,11 +502,9 @@ namespace CyLR
                         {
                             pathadd.Add(file);
                         }
+
                     }
-                    
-
-
-                    
+                                    
                         if (Directory.Exists($@"{Arguments.DriveLet}\perflogs"))
                         { string[] perfexes = Directory.GetFiles(
                         $@"{Arguments.DriveLet}\perflogs",
@@ -439,7 +539,11 @@ namespace CyLR
                     pathadd.RemoveAll(u => u.Contains("Google"));
                     pathadd.RemoveAll(u => u.Contains("Sync"));
                     pathadd.RemoveAll(u => u.Contains("Box"));
-
+                    pathadd.RemoveAll(u => u.Contains("CyLR"));
+                    pathadd.RemoveAll(u => u.Contains("Office"));
+                    pathadd.RemoveAll(u => u.Contains("Cylr"));
+                    pathadd.RemoveAll(u => u.Contains("publish"));
+                    
                     foreach (var file in pathadd)
                     {
                         FileStream f1 = File.OpenRead(file);
@@ -447,17 +551,29 @@ namespace CyLR
                         FileStream f256 = File.OpenRead(file);
                         string chksum256 = BitConverter.ToString(System.Security.Cryptography.SHA256.Create().ComputeHash(f256));
 
-                        string[] lines = { $@"{file}" + "   " + $@"{chksumSHA1.Replace("-", string.Empty)}" + "   " + $@"{chksum256.Replace("-", string.Empty)}"};
+                        
+                        string[] lines = { $@"{file}" + "|" + File.GetLastWriteTimeUtc(file) + "|" + File.GetCreationTimeUtc(file) + "|" + $@"{chksumSHA1.Replace("-", string.Empty)}" + "|" + $@"{chksum256.Replace("-", string.Empty)}"};
                         
                         File.AppendAllLines(Path.Combine(@"C:\", "EXEHash.txt"), lines);
-
+                        
+                        
                     }
+                    
                     defaultPaths.Add(@"C:\EXEHash.txt");
                     
+                    //defaultPaths.Add(@"C:\prochash.txt");
+
                 }
                 catch (FileNotFoundException)
                 {
                     //FAIL
+                }
+
+                //Need error handling logic to handle unretrievable exe\dll files stored in cloud.
+
+                catch (IOException)
+                {
+                    File.AppendAllText(@"C:\EXEHash.txt", "File not accessible. File will not be hashed");
                 }
             }
 
@@ -567,11 +683,35 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Local\temp\LogMeInLogs");
                             defaultPaths.Add($@"{User}\AppData\Local\Mega Limited\MEGAsync\logs");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\Clipboard");
-                            defaultPaths.Add(@"C:\EXEHash.txt");
                             defaultPaths.Add($@"{User}\Citrix WEM Agent.log");
                             defaultPaths.Add($@"{User}\Citrix WEM Agent Init.log");
+                            defaultPaths.Add($@"{User}\AppData\Local\pCloud\wpflog.log");
                         }
+                    string[] pcldrive = Directory.GetFiles(
+                        $@"{Arguments.DriveLet}\Users\",
+                        "*pCloud_Drive_*",
 
+                        new EnumerationOptions
+                        {
+                            RecurseSubdirectories = true
+                        });
+                    foreach (var file in pcldrive)
+                    {
+                        defaultPaths.Add(file);
+                    }
+
+                    string[] pcldata = Directory.GetFiles(
+                    $@"{Arguments.DriveLet}\Users\",
+                    "*data.db*",
+
+                    new EnumerationOptions
+                    {
+                        RecurseSubdirectories = true
+                    });
+                    foreach (var file in pcldata)
+                    {
+                        defaultPaths.Add(file);
+                    }
                 }
 
                 catch (Exception)
@@ -603,6 +743,20 @@ namespace CyLR
 
                         });
                     foreach (var file in rcloneFol)
+                    {
+                        defaultPaths.Add($@"{file}");
+                    }
+
+                    string[] ngrok = Directory.GetFiles(
+                        $@"{Arguments.DriveLet}\",
+                        "ngrok.yml",
+
+                        new EnumerationOptions
+                        {
+                            RecurseSubdirectories = true
+
+                        });
+                    foreach (var file in ngrok)
                     {
                         defaultPaths.Add($@"{file}");
                     }
@@ -716,7 +870,11 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Local\temp\LogMeInLogs");
                             defaultPaths.Add($@"{User}\AppData\Local\Mega Limited\MEGAsync\logs");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\Clipboard");
+                            defaultPaths.Add($@"{User}\AppData\Local\pCloud\wpflog.log");
+                            defaultPaths.Add($@"{User}\Citrix WEM Agent.log");
+                            defaultPaths.Add($@"{User}\Citrix WEM Agent Init.log");
                         }
+
                 }
 
                 catch (Exception)

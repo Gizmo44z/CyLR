@@ -69,6 +69,10 @@ namespace CyLR
             {
                 "-nohash",
                 "Skips hashing select files"
+            },
+            {
+                "-noinet",
+                "Skips collection of the \\inetpub\\logs\\LogFiles folder"
             }
         };
 
@@ -79,7 +83,7 @@ namespace CyLR
         public readonly string CollectionFilePath = ".";
         public readonly List<string> CollectionFiles = null; 
         public readonly string OutputPath = ".";
-        public readonly string OutputFileName = $"{Environment.MachineName}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}.zip", DateTime.Now)}";
+        public readonly string OutputFileName = $"{Environment.MachineName}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss.220726}.zip", DateTime.Now)}";
         public readonly bool UseSftp;
         public readonly string UserName = string.Empty;
         public readonly string UserPassword = string.Empty;
@@ -96,6 +100,7 @@ namespace CyLR
         public readonly string varSFTP = string.Empty;
         public readonly bool hash = true;
         public static string usr = string.Empty;
+        public readonly bool noinet = false;
 
         public Arguments(IEnumerable<string> args)
         {
@@ -159,6 +164,10 @@ namespace CyLR
 
                     case "-nohash":
                         hash = false;
+                        break;
+
+                    case "-noinet":
+                        noinet = true;
                         break;
 
                     case "-usr":
