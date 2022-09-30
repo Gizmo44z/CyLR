@@ -35,6 +35,8 @@ The standard list of collected artifacts are:
 
 Windows Default
 * See "CollectionPaths.txt" above for raw listing of paths\files collected.
+* Generates SysInfo.txt with important information about the host.
+* Generates EXEHash.txt with SHA1 and SHA256 along with LastWrite and Creation dates in specific file locations that house EXE or DLL files.
 
 Mac and Linux Default
 *  "/var/log",
@@ -75,6 +77,7 @@ Mac and Linux Default
  * '-nohash' - Disables the hashing capabilities of exe and dll files in specific directories.
  * '-usr' - specify a directory to collect user related artifacts if they are not stored in the default path (roaming user profiles, mounted VHDX user profiles, etc...). 
   * '-av' - Adds additional collection paths of anti-virus logs (not included by default due to potential size).
+  * '-noinet' - Excludes "\inetpub\logs\LogFile" path from default collection in cases of extreme size. Independent collection is recommended for Exchange and Web servers.
 
 
 ## DEPENDENCIES
