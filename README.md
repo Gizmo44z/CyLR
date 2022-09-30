@@ -24,7 +24,7 @@ CyLR uses .NET Core and runs natively on Windows, Linux, and MacOS. Self contain
 ## SYNOPSIS
 
 ```
-CyLR.exe [--help] [-od] [-of] [-u] [-p] [-s] [-c] [-zp] [-dl] [-usnjrnl] [-av] [-nohash] [-usr] [-dl]
+CyLR.exe [--help] [-od] [-of] [-u] [-p] [-s] [-c] [-zp] [-dl] [-usnjrnl] [-av] [-nohash] [-usr] [-dl] [-noinet]
 ```
 
 ## DESCRIPTION
@@ -35,8 +35,8 @@ The standard list of collected artifacts are:
 
 Windows Default
 * See "CollectionPaths.txt" above for raw listing of paths\files collected.
-* Generates SysInfo.txt with important information about the host.
-* Generates EXEHash.txt with SHA1 and SHA256 along with LastWrite and Creation dates in specific file locations that house EXE or DLL files.
+* Generates SysInfo.txt with important information about the host (deleted upon collection).
+* Generates EXEHash.txt with SHA1 and SHA256 along with LastWrite and Creation dates in specific file locations that house EXE or DLL files (deleted upon collection).
 
 Mac and Linux Default
 *  "/var/log",
