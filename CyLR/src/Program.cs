@@ -57,11 +57,11 @@ namespace CyLR
             try
             {
                 
-                paths = CollectionPaths.GetPaths(arguments, additionalPaths, arguments.Usnjrnl, arguments.AntiV, arguments.hash, arguments.noinet);
+                paths = CollectionPaths.GetPaths(arguments, additionalPaths, arguments.Usnjrnl, arguments.AntiV, arguments.hash, arguments.noinet, arguments.rec, arguments.desk, arguments.recycle);
                 nodupes = new HashSet<string>(paths).ToList();
 
-                //unqpaths = paths.Distinct().ToList();
                 
+
             }
             catch (Exception e)
             {
@@ -116,24 +116,28 @@ namespace CyLR
                 }
                 using (archiveStream)
                 {
-                    //List<string> unpaths = paths.Distinct().ToList();
                     CreateArchive(arguments, archiveStream, nodupes);
                     File.Delete(@"C:\EXEHash.txt");
                     File.Delete(@"C:\SysInfo.txt");
+                    File.Delete(@"C:\prochash.csv");
                 }
+
+                System.IO.File.Move(arguments.OutputPath + "\\" + arguments.OutputFileName, arguments.OutputPath + "\\" + $@"{arguments.OutputFileName.Replace("_INCOMPLETE", string.Empty)}");
 
                 stopwatch.Stop();
 
                 if (arguments.UseSftp)
                 {
                     // Attempt upload of SFTP.
+
+                    Console.WriteLine(arguments.UserName);
                     Console.WriteLine($"Attempting to upload to SFTP.");
                     SFTPUpload(arguments, outputPath);
                 }
             }
             catch (Exception)
             {
-                Console.WriteLine($"Upload failed. Please upload the local zip collection manually.");
+               
                 return 1;
             }
             return 0;
@@ -280,6 +284,7 @@ namespace CyLR
             if (!successfulUpload)
             {
                 Console.WriteLine("Unable to upload to SFTP. Zip file not removed. Please upload another way.");
+                
             }
 
         }

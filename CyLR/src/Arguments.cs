@@ -19,6 +19,10 @@ namespace CyLR
                 "Defines the name of the zip archive will be created. Defaults to host machine's name.\nUsage: -of <archive name>"
             },
             {
+                "-dl",
+                "Specifies Drive Letter you want to collect from. \nUsage: -dl D:"
+            },
+            {
                 "-c",
                 "Optional argument to provide custom list of artifact files and directories (one entry per line).\nNOTE: Must use full path including drive letter on each line.  MFT can be collected by \"C:$MFT\" or \"D:$MFT\" and so on.\nUsage: -c <path to config file>"
             },
@@ -35,6 +39,34 @@ namespace CyLR
                 "SFTP Server resolvable hostname or IP address and port. If no port is given then 22 is used by default.  Format is <server name>:<port>\n Usage: -s 8.8.8.8:22"
             },
             {
+                "-av",
+                "Collects anti-virus logs."
+            },
+            {
+                "-usr",
+                "Specifies additional directory where User profiles may be stored and collects normal user artifacts from that path. \nUsage: -usr \"<path to users>\""
+            },
+            {
+                "-nohash",
+                "Skips hashing select files."
+            },
+            {
+                "-noinet",
+                "Skips collection of the \"\\inetpub\\logs\\LogFiles folder\"."
+            },
+            {
+                "-rec",
+                "Disables recursive collection of non-resident rclone.conf, filezilla.xml, ngrok.yml, VMWare debug logs, pCloud logs, and winscp.ini files across the drive letter assigned."
+            },
+            {
+                "-dt",
+                "Enables the collection of the user Desktop folders."
+            },
+            {
+                "-recycle",
+                "Enables collection of Recycle Bin files."
+            },
+            {
                 "--dry-run",
                 "Collect artifacts to a virtual zip archive, but does not send or write to disk."
             },
@@ -44,36 +76,17 @@ namespace CyLR
             },
             {
                 "-zp",
-                "Uses a password to encrypt the archive file"
+                "Uses a password to encrypt the archive file."
             },
             {
                 "-zl",
-                "Uses a number between 1-9 to change the compression level of the archive file"
-            },
-            {
-                "-dl",
-                "Specifies Drive Letter you want to collect from."
+                "Uses a number between 1-9 to change the compression level of the archive file."
             },
             {
                 "-usnjrnl",
-                "Collects $UsnJrnl"
-            },
-            {
-                "-av",
-                "Collects anti-virus logs"
-            },
-            {
-                "-usr",
-                "Specifies additional directory where User profiles may be stored and collects normal user artifacts from that path. To use, provide the full path to the Users Profile folder (double quotes, if path contains a space) after the switch."
-            },
-            {
-                "-nohash",
-                "Skips hashing select files"
-            },
-            {
-                "-noinet",
-                "Skips collection of the \\inetpub\\logs\\LogFiles folder"
+                "Collects $UsnJrnl."
             }
+            
         };
 
         public readonly bool HelpRequested;
@@ -83,9 +96,9 @@ namespace CyLR
         public readonly string CollectionFilePath = ".";
         public readonly List<string> CollectionFiles = null; 
         public readonly string OutputPath = ".";
-        public readonly string OutputFileName = $"{Environment.MachineName}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss.220726}.zip", DateTime.Now)}";
+        public string OutputFileName = $"{Environment.MachineName}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}.zip_INCOMPLETE", DateTime.Now)}";
         public readonly bool UseSftp;
-        public readonly string UserName = string.Empty;
+        public string UserName = string.Empty;
         public readonly string UserPassword = string.Empty;
         public readonly string SFTPServer = string.Empty;
         public readonly bool DryRun;
@@ -101,6 +114,11 @@ namespace CyLR
         public readonly bool hash = true;
         public static string usr = string.Empty;
         public readonly bool noinet = false;
+        public readonly bool rec = true;
+        public readonly bool desk = false;
+        public readonly bool recycle = false;
+
+
 
         public Arguments(IEnumerable<string> args)
         {
@@ -123,7 +141,7 @@ namespace CyLR
                         OutputPath = argEnum.GetArgumentParameter();
                         break;
                     case "-of":
-                        OutputFileName = argEnum.GetArgumentParameter();
+                        OutputFileName = argEnum.GetArgumentParameter() + "_INCOMPLETE";
                         break;
                     case "-u":
                         UserName = argEnum.GetArgumentParameter();
@@ -142,6 +160,7 @@ namespace CyLR
                     case "-zp":
                         ZipPassword = argEnum.GetArgumentParameter();
                         break;
+
                     case "-dl":
                         DriveLet = argEnum.GetArgumentParameter();
                         break;
@@ -170,8 +189,20 @@ namespace CyLR
                         noinet = true;
                         break;
 
+                    case "-rec":
+                        rec = false;
+                        break;
+
                     case "-usr":
                         usr = argEnum.GetArgumentParameter();
+                        break;
+
+                    case "-dt":
+                        desk = true;
+                        break;
+
+                    case "-recycle":
+                        recycle = true;
                         break;
 
                     case "--force-native":
