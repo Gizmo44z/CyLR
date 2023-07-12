@@ -24,7 +24,7 @@ CyLR uses .NET Core and runs natively on Windows, Linux, and MacOS. Self contain
 ## SYNOPSIS
 
 ```
-CyLR.exe [--help] [-od] [-of] [-u] [-p] [-s] [-c] [-zp] [-dl] [-usnjrnl] [-av] [-nohash] [-usr] [-dl] [-noinet]
+CyLR.exe [--help] [-od] [-of] [-u] [-p] [-s] [-c] [-zp] [-dl] [-usnjrnl] [-av] [-nohash] [-usr] [-dl] [-noinet] [-dt] [-recycle]
 ```
 
 ## DESCRIPTION
@@ -73,12 +73,13 @@ Mac and Linux Default
     * '-s' — SFTP Server resolvable hostname or IP address and port. If no port is given then 22 is used by default.  The format is <server name>:<port>.  Usage: -s 8.8.8.8:22"
     * SFTP upload method has been updated to use public release CyLR 3.0 where it will attempt to upload to SFTP 3x and if it fails, it will keep the file at the designated location.
 * '-c' — Optional argument to provide custom list of artifact files and directories (one entry per line). NOTE: Must use full path including drive letter on each line.  MFT can be collected by "C:\$MFT" or "D:\$MFT" and so on.  Usage: -c <path to config file>
- * '-dl' - Select drive letter to collect from (Default value is "C:").
+ * '-dl' - Select drive letter to collect from (Default value is "C:"). Usage: -dl D:
  * '-nohash' - Disables the hashing capabilities of exe and dll files in specific directories.
  * '-usr' - specify a directory to collect user related artifacts if they are not stored in the default path (roaming user profiles, mounted VHDX user profiles, etc...). 
-  * '-av' - Adds additional collection paths of anti-virus logs (not included by default due to potential size).
-  * '-noinet' - Excludes "\inetpub\logs\LogFile" path from default collection in cases of extreme size. Independent collection is recommended for Exchange and Web servers.
-
+ * '-av' - Adds additional collection paths of anti-virus logs (not included by default due to potential size).
+ * '-noinet' - Excludes "\inetpub\logs\LogFile" path from default collection in cases of extreme size. Independent collection is recommended for Exchange and Web servers.
+ * '-dt' - Collect all users Desktop folders.
+ * '-recycle' - Collect the Recycle Bin from the target drive.
 
 ## DEPENDENCIES
 In general: some kind of administrative rights on the target (root, sudo, administrator,...).
