@@ -85,8 +85,16 @@ namespace CyLR
             {
                 "-usnjrnl",
                 "Collects $UsnJrnl."
+            },
+            {
+                "-conly",
+                "Collects only the C:\\$MFT."
+            },
+            {
+                "-uvhd",
+                "Individual user profile VHD collection can be performed to collect user artifacts from the root of the mounted drive."
             }
-            
+
         };
 
         public readonly bool HelpRequested;
@@ -96,7 +104,7 @@ namespace CyLR
         public readonly string CollectionFilePath = ".";
         public readonly List<string> CollectionFiles = null; 
         public readonly string OutputPath = ".";
-        public string OutputFileName = $"{Environment.MachineName}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}.zip_INCOMPLETE", DateTime.Now)}";
+        public string OutputFileName = "CyLR_" + $"{Environment.MachineName}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}.zip"+"_INCOMPLETE", DateTime.Now)}";
         public readonly bool UseSftp;
         public string UserName = string.Empty;
         public readonly string UserPassword = string.Empty;
@@ -117,6 +125,7 @@ namespace CyLR
         public readonly bool rec = true;
         public readonly bool desk = false;
         public readonly bool recycle = false;
+        public readonly bool conly = false;
 
 
 
@@ -141,7 +150,7 @@ namespace CyLR
                         OutputPath = argEnum.GetArgumentParameter();
                         break;
                     case "-of":
-                        OutputFileName = argEnum.GetArgumentParameter() + "_INCOMPLETE";
+                        OutputFileName = "CyLR_" + argEnum.GetArgumentParameter() + "_INCOMPLETE";
                         break;
                     case "-u":
                         UserName = argEnum.GetArgumentParameter();
@@ -195,6 +204,10 @@ namespace CyLR
 
                     case "-usr":
                         usr = argEnum.GetArgumentParameter();
+                        break;
+
+                    case "-cmft":
+                        conly = true;
                         break;
 
                     case "-dt":

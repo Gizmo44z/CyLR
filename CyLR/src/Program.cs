@@ -57,7 +57,7 @@ namespace CyLR
             try
             {
                 
-                paths = CollectionPaths.GetPaths(arguments, additionalPaths, arguments.Usnjrnl, arguments.AntiV, arguments.hash, arguments.noinet, arguments.rec, arguments.desk, arguments.recycle);
+                paths = CollectionPaths.GetPaths(arguments, additionalPaths, arguments.Usnjrnl, arguments.AntiV, arguments.hash, arguments.noinet, arguments.rec, arguments.desk, arguments.recycle, arguments.conly);
                 nodupes = new HashSet<string>(paths).ToList();
 
                 
@@ -73,42 +73,11 @@ namespace CyLR
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-
-            //Legacy zip archiving code, does not attempt 3 time SFTP upload
-            //try
-            //{
-            //    var archiveStream = Stream.Null;
-            //    if (!arguments.DryRun)
-            //    {
-            //        var outputPath = $@"{arguments.OutputPath}/{arguments.OutputFileName}";
-            //        if (arguments.UseSftp)
-            //        {
-            //            var client = CreateSftpClient(arguments);
-            //            archiveStream = client.Create(outputPath);
-            //        }
-            //        else
-            //        {
-            //            archiveStream = OpenFileStream(outputPath);
-            //        }
-            //    }
-            //    using (archiveStream)
-            //    {
-            //        CreateArchive(arguments, archiveStream, paths);
-            //    }
-
-            //    stopwatch.Stop();
-            //    Console.WriteLine("Extraction complete. {0} elapsed", new TimeSpan(stopwatch.ElapsedTicks).ToString("g"));
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.Error.WriteLine($"Error occured while collecting files:\n{e}");
-            //    return 1;
-            //}
-            //return 0;
-
             try
             {
                 var archiveStream = Stream.Null;
+                //arguments.OutputFileName = arguments.OutputFileName.Replace("_INCOMPLETE", string.Empty);
+                //System.Threading.Thread.Sleep(1000);
                 var outputPath = $@"{arguments.OutputPath}/{arguments.OutputFileName}";
                 if (!arguments.DryRun)
                 {
@@ -120,12 +89,16 @@ namespace CyLR
                     File.Delete(@"C:\EXEHash.txt");
                     File.Delete(@"C:\SysInfo.txt");
                     File.Delete(@"C:\prochash.csv");
+                    
                 }
-
                 System.IO.File.Move(arguments.OutputPath + "\\" + arguments.OutputFileName, arguments.OutputPath + "\\" + $@"{arguments.OutputFileName.Replace("_INCOMPLETE", string.Empty)}");
+                System.Threading.Thread.Sleep(3000);
+
 
                 stopwatch.Stop();
 
+                System.IO.File.Move(arguments.OutputPath + "\\" + arguments.OutputFileName, arguments.OutputPath + "\\" + $@"{arguments.OutputFileName.Replace("_INCOMPLETE", string.Empty)}");
+                System.Threading.Thread.Sleep(3000);
                 if (arguments.UseSftp)
                 {
                     // Attempt upload of SFTP.
@@ -306,20 +279,6 @@ namespace CyLR
                 port = 22;
             }
 
-            // Will need lots of testing with making SSH key work. Below is a draft of making it work with CyLRUpload account.
-//            string privkey = @"-----BEGIN RSA PRIVATE KEY-----
-//CyLRUpload Account SSH Key
-//-----END RSA PRIVATE KEY-----";
-//            var keyfile = new PrivateKeyFile(privkey);
-//            var keyFiles = new[] { keyfile };
-//            var connectinfo = new ConnectionInfo(server[0], arguments.UserName,
-//                new PasswordAuthenticationMethod(arguments.UserName, arguments.UserPassword),
-//                new PrivateKeyAuthenticationMethod(arguments.UserName, keyFiles));
-//            using (var client = new SftpClient (ConnectionInfo))
-//            {
-//                client.Connect();
-//                return client;
-//            }
             var client = new SftpClient(server[0], port, arguments.UserName, arguments.UserPassword);
             client.Connect();
             return client;
