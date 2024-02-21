@@ -590,7 +590,7 @@ namespace CyLR
                     ipproc.WaitForExit();
 
                     File.AppendAllText(@"C:\SysInfo.txt", ipinf);
-                    File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "Times are in LOCAL drive collection format" + Environment.NewLine + "CyLR Version 2023.07.11" +
+                    File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "Times are in UTC time" + Environment.NewLine + "CyLR Version 2024.02.05" +
                         Environment.NewLine + Environment.NewLine + $"Drive Letter: {Arguments.DriveLet}" +
                         Environment.NewLine + $"Skip inet: {arguments.noinet}" +
                         Environment.NewLine + $"Hash Files: {arguments.hash}" +
@@ -682,7 +682,7 @@ namespace CyLR
                     ipproc.WaitForExit();
 
                     File.AppendAllText(@"C:\SysInfo.txt", ipinf);
-                    File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "Times are in LOCAL drive collection format" + Environment.NewLine + "CyLR Version 2024.01.20" +
+                    File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "TIMES ARE IN UTC" + Environment.NewLine + "CyLR Version 2024.02.05" +
                         Environment.NewLine + Environment.NewLine + $"Drive Letter: {Arguments.DriveLet}" +
                         Environment.NewLine + $"Skip inet: {arguments.noinet}" +
                         Environment.NewLine + $"Hash Files: {arguments.hash}" +
@@ -727,16 +727,6 @@ namespace CyLR
                     pathadd.AddRange(progdll);
                     string[] rootdll = Directory.GetFiles($@"{Arguments.DriveLet}\", "*.dll", SearchOption.TopDirectoryOnly);
                     pathadd.AddRange(rootdll);
-
-                    string[] rconf = Directory.GetFiles($@"{Arguments.DriveLet}\", "*.conf",
-                        new EnumerationOptions
-                        {
-                            RecurseSubdirectories = true
-                        });
-                    foreach (var file in rconf)
-                    {
-                        pathadd.Add(file);
-                    }
 
                     if (Directory.Exists($@"{Arguments.DriveLet}\Users"))
                     {
@@ -824,8 +814,8 @@ namespace CyLR
                         string chksum256 = BitConverter.ToString(System.Security.Cryptography.SHA256.Create().ComputeHash(f256));
 
                         
-                        string[] lines = { $@"{file}" + "|" + (new FileInfo(file).Length) + "|" + File.GetLastWriteTimeUtc(file) + "|" + File.GetCreationTimeUtc(file) + "|" + $@"{chksumSHA1.Replace("-", string.Empty)}" + "|" + $@"{chksum256.Replace("-", string.Empty)}" };
-                        string[] knhash = { ".conf","filezilla","winscp","rclone","mega","7fcff763279c06aaa41da2a4b65c8d038ebcf63e", "52332ce16ee0c393b8eea6e71863ad41e3caeafd", "b97761358338e640a31eef5e5c5773b633890914", "d373052c6f7492e0dd5f2c705bac6b5afe7ffc24", "162b08b0b11827cc024e6b2eed5887ec86339baa", "c8107e5c5e20349a39d32f424668139a36e6cfd0", "a0bdfac3ce1880b32ff9b696458327ce352e3b1d", "763499b37aacd317e7d2f512872f9ed719aacae1", "f0966985745541ba01800aa213509a89a7fdf716", "793e8c44dc51e6cb73977135af71b437f652154c"};
+                        string[] lines = { $@"{file}" + "|" + (new FileInfo(file).Length) + "|" + File.GetLastWriteTimeUtc(file).ToString("MM/dd/yyyy HH:mm") + "|" + File.GetCreationTimeUtc(file).ToString("MM/dd/yyyy HH:mm") + "|" + $@"{chksumSHA1.Replace("-", string.Empty)}" + "|" + $@"{chksum256.Replace("-", string.Empty)}" };
+                        string[] knhash = { "filezilla","winscp","rclone","mega","7fcff763279c06aaa41da2a4b65c8d038ebcf63e", "52332ce16ee0c393b8eea6e71863ad41e3caeafd", "b97761358338e640a31eef5e5c5773b633890914", "d373052c6f7492e0dd5f2c705bac6b5afe7ffc24", "162b08b0b11827cc024e6b2eed5887ec86339baa", "c8107e5c5e20349a39d32f424668139a36e6cfd0", "a0bdfac3ce1880b32ff9b696458327ce352e3b1d", "763499b37aacd317e7d2f512872f9ed719aacae1", "f0966985745541ba01800aa213509a89a7fdf716", "793e8c44dc51e6cb73977135af71b437f652154c"};
 
                         foreach (string line in lines)
                         {
@@ -885,7 +875,7 @@ namespace CyLR
 
                 Console.WriteLine("Recording CMD Information...");
                 
-                File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "Times are in LOCAL drive collection format" + Environment.NewLine + "CyLR Version 2024.02.25" +
+                File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "Times are in UTC time" + Environment.NewLine + "CyLR Version 2024.02.05" +
                     Environment.NewLine + Environment.NewLine + $"Drive Letter: {Arguments.DriveLet}" +
                     Environment.NewLine + $"Skip inet: {arguments.noinet}" +
                     Environment.NewLine + $"Hash Files: {arguments.hash}" +
@@ -916,9 +906,9 @@ namespace CyLR
                         foreach (var User in WinUserFolders)
                         {
 
-                            defaultPaths.Add($@"{User}\NTUSER.DAT");
-                            defaultPaths.Add($@"{User}\NTUSER.DAT.LOG1");
-                            defaultPaths.Add($@"{User}\NTUSER.DAT.LOG2");
+                            //defaultPaths.Add($@"{User}\NTUSER.DAT");
+                            //defaultPaths.Add($@"{User}\NTUSER.DAT.LOG1");
+                            //defaultPaths.Add($@"{User}\NTUSER.DAT.LOG2");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG1");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG2");
@@ -1007,12 +997,13 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Local\MEGA");
                         }
 
+
                     if (Directory.Exists(ServicePro))
                         foreach (var Serve in ServiceFol)
                         {
-                            defaultPaths.Add($@"{Serve}\NTUSER.DAT");
-                            defaultPaths.Add($@"{Serve}\NTUSER.DAT.LOG1");
-                            defaultPaths.Add($@"{Serve}\NTUSER.DAT.LOG2");
+                            //defaultPaths.Add($@"{Serve}\NTUSER.DAT");
+                            //defaultPaths.Add($@"{Serve}\NTUSER.DAT.LOG1");
+                            //defaultPaths.Add($@"{Serve}\NTUSER.DAT.LOG2");
                             defaultPaths.Add($@"{Serve}\AppData\Local\Microsoft\Windows\UsrClass.dat");
                             defaultPaths.Add($@"{Serve}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG1");
                             defaultPaths.Add($@"{Serve}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG2");
@@ -1108,6 +1099,92 @@ namespace CyLR
                 }
 
                 try
+                {
+                    string NTU = Arguments.DriveLet + "\\Windows\\ServiceProfiles";
+                    string[] allntu = Directory.GetDirectories(NTU);
+
+
+                    foreach (var fol in allntu)
+                    {
+                        try
+                        {
+
+                            string[] usnt = Directory.GetFiles($@"{fol}", "NTUSER.*", SearchOption.TopDirectoryOnly);
+                            if (Directory.Exists(fol))
+                                foreach (var file in usnt)
+                                {
+                                    defaultPaths.Add($@"{file}");
+                                }
+                        }
+                        catch (Exception)
+                        {
+                            //FAIL
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    //FAIL
+                }
+
+                try
+                {
+                    string NTU = Arguments.DriveLet + "\\Users\\";
+                    string[] allntu = Directory.GetDirectories(NTU);
+
+
+                    foreach (var fol in allntu)
+                    {
+                        try
+                        {
+
+                            string[] usnt = Directory.GetFiles($@"{fol}", "NTUSER.*", SearchOption.TopDirectoryOnly);
+                            if (Directory.Exists(fol))
+                                foreach (var file in usnt)
+                                {
+                                    defaultPaths.Add($@"{file}");
+                                }
+                        }
+                        catch (Exception)
+                        {
+                            //FAIL
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    //FAIL
+                }
+
+                try
+                {
+                    string NTU = Arguments.DriveLet + "\\Windows.old\\Users\\";
+                    string[] allntu = Directory.GetDirectories(NTU);
+
+
+                    foreach (var fol in allntu)
+                    {
+                        try
+                        {
+
+                            string[] usnt = Directory.GetFiles($@"{fol}", "NTUSER.*", SearchOption.TopDirectoryOnly);
+                            if (Directory.Exists(fol))
+                                foreach (var file in usnt)
+                                {
+                                    defaultPaths.Add($@"{file}");
+                                }
+                        }
+                        catch (Exception)
+                        {
+                            //FAIL
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    //FAIL
+                }
+                try
 
                 {
                     string UserOld = Arguments.DriveLet + "\\Windows.old\\Users\\";
@@ -1115,9 +1192,9 @@ namespace CyLR
                     if (Directory.Exists(UserOld))
                         foreach (var User in WinUserOld)
                         {
-                            defaultPaths.Add($@"{User}\NTUSER.DAT");
-                            defaultPaths.Add($@"{User}\NTUSER.DAT.LOG1");
-                            defaultPaths.Add($@"{User}\NTUSER.DAT.LOG2");
+                            //defaultPaths.Add($@"{User}\NTUSER.DAT");
+                            //defaultPaths.Add($@"{User}\NTUSER.DAT.LOG1");
+                            //defaultPaths.Add($@"{User}\NTUSER.DAT.LOG2");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG1");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG2");
@@ -1214,6 +1291,35 @@ namespace CyLR
                 }
 
                 try
+                {
+                    string NTU = Arguments.DriveLet + "\\Documents and Settings\\";
+                    string[] allntu = Directory.GetDirectories(NTU);
+
+
+                    foreach (var fol in allntu)
+                    {
+                        try
+                        {
+
+                            string[] usnt = Directory.GetFiles($@"{fol}", "NTUSER.*", SearchOption.TopDirectoryOnly);
+                            if (Directory.Exists(fol))
+                                foreach (var file in usnt)
+                                {
+                                    defaultPaths.Add($@"{file}");
+                                }
+                        }
+                        catch (Exception)
+                        {
+                            //FAIL
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    //FAIL
+                }
+
+                try
 
                 {
                     string UserPath2k3 = Arguments.DriveLet + "\\Documents and Settings\\";
@@ -1221,10 +1327,10 @@ namespace CyLR
                     if (Directory.Exists(UserPath2k3))
                         foreach (var User2k3 in WinUserFolders2k3)
                         {
-                            defaultPaths.Add($@"{User2k3}\NTUSER.DAT");
-                            defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG");
-                            defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG1");
-                            defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG2");
+                            //defaultPaths.Add($@"{User2k3}\NTUSER.DAT");
+                            //defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG");
+                            //defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG1");
+                            //defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG2");
                             defaultPaths.Add($@"{User2k3}\Recent\");
                             defaultPaths.Add($@"{User2k3}\PrivacIE\");
                             defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Microsoft\Windows\UsrClass.dat");

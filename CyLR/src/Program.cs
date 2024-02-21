@@ -76,8 +76,7 @@ namespace CyLR
             try
             {
                 var archiveStream = Stream.Null;
-                //arguments.OutputFileName = arguments.OutputFileName.Replace("_INCOMPLETE", string.Empty);
-                //System.Threading.Thread.Sleep(1000);
+                
                 var outputPath = $@"{arguments.OutputPath}/{arguments.OutputFileName}";
                 if (!arguments.DryRun)
                 {
@@ -91,26 +90,32 @@ namespace CyLR
                     File.Delete(@"C:\prochash.csv");
                     
                 }
+                
                 System.IO.File.Move(arguments.OutputPath + "\\" + arguments.OutputFileName, arguments.OutputPath + "\\" + $@"{arguments.OutputFileName.Replace("_INCOMPLETE", string.Empty)}");
+                arguments.OutputFileName = $@"{arguments.OutputFileName.Replace(("_INCOMPLETE"), string.Empty)}";
+                Console.WriteLine("Zipping process complete...");
                 System.Threading.Thread.Sleep(3000);
-
+                outputPath = $@"{arguments.OutputPath}/{arguments.OutputFileName}";
+                
 
                 stopwatch.Stop();
 
-                System.IO.File.Move(arguments.OutputPath + "\\" + arguments.OutputFileName, arguments.OutputPath + "\\" + $@"{arguments.OutputFileName.Replace("_INCOMPLETE", string.Empty)}");
-                System.Threading.Thread.Sleep(3000);
+
                 if (arguments.UseSftp)
                 {
                     // Attempt upload of SFTP.
-
+                    
                     Console.WriteLine(arguments.UserName);
-                    Console.WriteLine($"Attempting to upload to SFTP.");
+                    Console.WriteLine(arguments.OutputFileName);
+                    Console.WriteLine($"Attempting to upload to SFTP...");
                     SFTPUpload(arguments, outputPath);
                 }
+                
             }
+
             catch (Exception)
             {
-               
+                Console.WriteLine($"Upload failed. Please upload the local zip collection manually.");
                 return 1;
             }
             return 0;
@@ -182,12 +187,12 @@ namespace CyLR
         /// for the network to become more stable. If the upload is successful,
         /// the resulting archive file will be removed from the system - unless
         /// the user specified <c>--no-sftpcleanup</c> at invocation.
-        /// </summary>
+        /// </summary> 
         /// <param name="arguments">User specified arguments with SFTP and other details</param>
         /// <param name="outputPath">Path to the archive file to upload</param>
-        /// <param name="logger">Logging object</param>
         private static void SFTPUpload(Arguments arguments, string outputPath)
         {
+            
             bool successfulUpload = false;
             int max_tries = 3;
             int num_tries = 0;
@@ -196,7 +201,7 @@ namespace CyLR
                 bool attemptSuccess = false;
                 try
                 {
-
+                    
                     var sftpStream = Stream.Null;
                     var client = CreateSftpClient(arguments);
                     sftpStream = client.Create($@"{arguments.SFTPOutputPath}/{arguments.OutputFileName}");

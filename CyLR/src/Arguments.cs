@@ -150,7 +150,7 @@ namespace CyLR
                         OutputPath = argEnum.GetArgumentParameter();
                         break;
                     case "-of":
-                        OutputFileName = "CyLR_" + argEnum.GetArgumentParameter() + "_INCOMPLETE";
+                        OutputFileName = "CyLR_" + $@"{argEnum.GetArgumentParameter().Replace((".zip"), string.Empty)}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}.zip" + "_INCOMPLETE", DateTime.Now)}";
                         break;
                     case "-u":
                         UserName = argEnum.GetArgumentParameter();
