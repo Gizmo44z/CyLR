@@ -24,7 +24,7 @@ CyLR uses .NET Core and runs natively on Windows, Linux, and MacOS. Self contain
 ## SYNOPSIS
 
 ```
-CyLR.exe [--help] [-od] [-of] [-u] [-p] [-s] [-c] [-zp] [-dl] [-usnjrnl] [-av] [-nohash] [-usr] [-dl] [-noinet] [-dt] [-recycle]
+CyLR.exe [--help] [-od] [-of] [-u] [-p] [-s] [-c] [-zp] [-dl] [-usnjrnl] [-av] [-nohash] [-usr] [-dl] [-noinet] [-dt] [-recycle] [-cmft]
 ```
 
 ## DESCRIPTION
@@ -80,6 +80,7 @@ Mac and Linux Default
  * '-noinet' - Excludes "\inetpub\logs\LogFile" path from default collection in cases of extreme size. Independent collection is recommended for Exchange and Web servers.
  * '-dt' - Collect all users Desktop folders.
  * '-recycle' - Collect the Recycle Bin from the target drive.
+ * '-cmft' - Only collects C:\ drive information if you do not want secondary or attached drives collected from.
 
 ## DEPENDENCIES
 In general: some kind of administrative rights on the target (root, sudo, administrator,...).
@@ -126,7 +127,7 @@ Collect artifacts on local disk and send data to SFTP server 8.8.8.8, local copy
 
 Collect artifacts from a mounted image on the E: drive
     ```
-    CyLR.exe -mount -dl E:
+    CyLR.exe -dl E:
     ```
     
 ## AUTHORS
