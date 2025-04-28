@@ -10,6 +10,8 @@ using Renci.SshNet;
 using ArchiveFile = CyLR.archive.File;
 using File = System.IO.File;
 using System.Threading.Tasks;
+using Shell32;
+using System.IO.Compression;
 
 
 namespace CyLR
@@ -57,7 +59,7 @@ namespace CyLR
             try
             {
                 
-                paths = CollectionPaths.GetPaths(arguments, additionalPaths, arguments.Usnjrnl, arguments.AntiV, arguments.hash, arguments.noinet, arguments.rec, arguments.desk, arguments.recycle, arguments.conly);
+                paths = CollectionPaths.GetPaths(arguments, additionalPaths, arguments.Usnjrnl, arguments.AntiV, arguments.hash, arguments.noinet, arguments.rec, arguments.desk, arguments.recycle, arguments.conly, arguments.OutputFileName);
                 nodupes = new HashSet<string>(paths).ToList();
 
                 
@@ -101,16 +103,20 @@ namespace CyLR
                 stopwatch.Stop();
 
 
-                if (arguments.UseSftp)
+                if (arguments.UseSftp == true)
                 {
                     // Attempt upload of SFTP.
-                    
+
                     Console.WriteLine(arguments.UserName);
                     Console.WriteLine(arguments.OutputFileName);
                     Console.WriteLine($"Attempting to upload to SFTP...");
                     SFTPUpload(arguments, outputPath);
                 }
-                
+                //else
+                //{
+                    
+                //}
+
             }
 
             catch (Exception)
@@ -246,7 +252,7 @@ namespace CyLR
                     System.Threading.Thread.Sleep(30 * 1000);
                 }
 
-                if (attemptSuccess)
+                if (attemptSuccess == true)
                 {
                     successfulUpload = true;
                     Console.WriteLine("Upload complete.");
@@ -257,13 +263,15 @@ namespace CyLR
                     Console.WriteLine("Removed local zip file collection.");
 
                 }
+                else
+                {
+                    Console.WriteLine("Unable to upload to SFTP. Zip file not removed. Please upload another way.");
+
+                }
 
             }
-            if (!successfulUpload)
-            {
-                Console.WriteLine("Unable to upload to SFTP. Zip file not removed. Please upload another way.");
-                
-            }
+            
+            
 
         }
 

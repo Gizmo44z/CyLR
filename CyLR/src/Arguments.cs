@@ -104,8 +104,8 @@ namespace CyLR
         public readonly string CollectionFilePath = ".";
         public readonly List<string> CollectionFiles = null; 
         public readonly string OutputPath = ".";
-        public string OutputFileName = "CyLR_" + $"{Environment.MachineName}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}.zip"+"_INCOMPLETE", DateTime.Now)}";
-        public readonly bool UseSftp;
+        public string OutputFileName = "CyLR_" + $"{Environment.MachineName}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}.zip"+"_INCOMPLETE", DateTime.UtcNow)}";
+        public readonly bool UseSftp = false;
         public string UserName = string.Empty;
         public readonly string UserPassword = string.Empty;
         public readonly string SFTPServer = string.Empty;
@@ -150,7 +150,7 @@ namespace CyLR
                         OutputPath = argEnum.GetArgumentParameter();
                         break;
                     case "-of":
-                        OutputFileName = "CyLR_" + $@"{argEnum.GetArgumentParameter().Replace((".zip"), string.Empty)}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}.zip" + "_INCOMPLETE", DateTime.Now)}";
+                        OutputFileName = "CyLR_" + $@"{argEnum.GetArgumentParameter().Replace((".zip"), string.Empty)}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}.zip" + "_INCOMPLETE", DateTime.UtcNow)}";
                         break;
                     case "-u":
                         UserName = argEnum.GetArgumentParameter();
@@ -159,6 +159,7 @@ namespace CyLR
                         UserPassword = argEnum.GetArgumentParameter();
                         break;
                     case "-s":
+                        UseSftp = true;
                         SFTPServer = argEnum.GetArgumentParameter();
                         break;
 
@@ -241,7 +242,6 @@ namespace CyLR
 
             if (!HelpRequested)
             {
-                //Removing "UserPassword" for SSH key testing***************************
                 var sftpArgs = new[] { UserName, SFTPServer };
                 UseSftp = sftpArgs.Any(arg => !string.IsNullOrEmpty(arg));
                 if (UseSftp && sftpArgs.Any(string.IsNullOrEmpty))

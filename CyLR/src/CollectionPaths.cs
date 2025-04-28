@@ -5,6 +5,9 @@ using System.Linq;
 using System.Diagnostics;
 using Microsoft.Win32;
 using System.Security.Cryptography;
+using System.IO.Enumeration;
+using Shell32;
+using System.IO.Compression;
 //using Hyldahl.Hashing;
 
 namespace CyLR
@@ -34,7 +37,7 @@ namespace CyLR
                 yield return proc.StandardOutput.ReadLine();
             };
         }
-        public static List<string> GetPaths(Arguments arguments, List<string> additionalPaths, bool Usnjrnl, bool AntiV, bool Hash, bool noinet, bool rec, bool desk, bool recycle, bool conly)
+        public static List<string> GetPaths(Arguments arguments, List<string> additionalPaths, bool Usnjrnl, bool AntiV, bool Hash, bool noinet, bool rec, bool desk, bool recycle, bool conly, string OutputFileName)
         {
             File.Delete(@"C:\EXEHash.txt");
             File.Delete(@"C:\SysInfo.txt");
@@ -149,7 +152,14 @@ namespace CyLR
                 $@"{Arguments.DriveLet}\Program Files\Microsoft\Exchange Server\V15\Logging\CmdletInfra\Powershell-Proxy\Http",
                 $@"{Arguments.DriveLet}\ProgramData\OpenBoxLab\RaiDrive\log",
                 $@"{Arguments.DriveLet}\ProgramData\Admin Arsenal\PDQ Inventory\Database.db",
-
+                $@"{Arguments.DriveLet}\ProgramData\JWrapper-Remote Access\logs",
+                $@"{Arguments.DriveLet}\ProgramData\S3Browser",
+                $@"{Arguments.DriveLet}\ProgramData\Packages\uvncbvba\UltraVNC\mslogon.log",
+                $@"{Arguments.DriveLet}\ProgramData\Duo Security\duo.log",
+                $@"{Arguments.DriveLet}\Program Files\ATERA Networks\AteraAgent\Packages\AgentPackageRunCommandInteractive\log.txt",
+                $@"{Arguments.DriveLet}\Program Files (x86)\UltraViewer\UltraViewerService_log.txt",
+                $@"{Arguments.DriveLet}\Windows\Action1\logs",
+                $@"{Arguments.DriveLet}\Windows\ntds.dit"
             };
 
             if (rec == true)
@@ -218,7 +228,7 @@ namespace CyLR
                 {
                     //FAIL
                 }
-                
+
                 try
                 {
                     string[] ngrok = Directory.GetFiles(
@@ -456,6 +466,7 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Windows\Recent");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Office\Recent");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Opera");
+                            defaultPaths.Add($@"{User}\AppData\Local\Opera");
                             defaultPaths.Add($@"{User}\AppData\Local\Opera Software\Opera Stable");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Opera Software\Opera Stable");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Terminal Server Client\Cache");
@@ -495,6 +506,12 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Local\pCloud\data.db1");
                             defaultPaths.Add($@"{User}\AppData\Local\pCloud\data.db-wal");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup");
+                            defaultPaths.Add($@"{User}\.azcopy");
+                            defaultPaths.Add($@"{User}\AppData\Local\ZohoMeeting\log");
+                            defaultPaths.Add($@"{User}\AppData\Local\rClone\rclone.conf");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\rClone\rclone.conf");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\S3Browser\logs");
+                            defaultPaths.Add($@"{User}\AppData\Local\ZohoMeeting\log");
                         }
 
                 }
@@ -559,6 +576,36 @@ namespace CyLR
                     string strpsOut = psProcess.StandardOutput.ReadToEnd();
                     psProcess.WaitForExit();
 
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                    //TESTING ADDITION OF SYSTEM NAME COLUMN TO PROCHASH (TO BE REMOVED)
+                    //Fix system name
+                    //string procof = arguments.OutputFileName;
+                    //procof = $@"{procof.Replace(("CyLR_"), string.Empty)}";
+                    
+
+                    //int index = procof.IndexOf("_");
+                    //if (index >= 0)
+                    //    procof = procof.Substring(0, index);
+
+                    //var lines = File.ReadAllLines(@"C:\prochash.csv");
+                    //var syname = lines[0];
+
+                    //var updatedLines = new List<string>
+                    //{
+                    //    syname + ",SystemName"
+                    //};
+
+                    //for (int i = 1; i < lines.Length; i++)
+                    //{
+                    //    var columns = lines[i].Split(',');
+                       
+                    //    var upRow = string.Join(",", columns) + "," + procof;
+                    //    updatedLines.Add(upRow);
+                    //}
+
+                    //File.WriteAllLines(@"C:\prochash.csv", updatedLines);
+ //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
                     string strcommand = @"cmd.exe";
                     string strparam = @" /c systeminfo | findstr /c:""Host Name"" /c:""OS Name"" /c:""Original Install Date"" /c:""System Boot Time"" /c:""Time Zone"" /c:""Domain"" /c:""Logon Server"" /c:""OS Version"" & ipconfig | findstr /c:""ipv4""";
                     string ipcon = @" /c ipconfig | findstr /i ""ipv4""";
@@ -590,7 +637,7 @@ namespace CyLR
                     ipproc.WaitForExit();
 
                     File.AppendAllText(@"C:\SysInfo.txt", ipinf);
-                    File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "Times are in UTC time" + Environment.NewLine + "CyLR Version 2024.02.05" +
+                    File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "Times are in UTC time" + Environment.NewLine + "CyLR Version 2025.04.24" +
                         Environment.NewLine + Environment.NewLine + $"Drive Letter: {Arguments.DriveLet}" +
                         Environment.NewLine + $"Skip inet: {arguments.noinet}" +
                         Environment.NewLine + $"Hash Files: {arguments.hash}" +
@@ -651,6 +698,39 @@ namespace CyLR
                     string strpsOut = psProcess.StandardOutput.ReadToEnd();
                     psProcess.WaitForExit();
 
+//------------------------------------------------------------------------------------------------------------------------------
+                    //Remove prochash function adding system name
+                    ////Fix system name
+                    //string procof = arguments.OutputFileName;
+                    //procof = $@"{procof.Replace(("CyLR_"), string.Empty)}";
+
+
+                    //int index = procof.IndexOf("_");
+                    //if (index >= 0)
+                    //    procof = procof.Substring(0, index);
+
+                    ////string inproc = @"C:\prochash.csv";
+                    ////string outproc = @"C:\prochash.csv";
+
+                    //var lines = File.ReadAllLines(@"C:\prochash.csv");
+                    //var syname = lines[0];
+
+                    //var updatedLines = new List<string>
+                    //{
+                    //    syname + ",SystemName"
+                    //};
+
+                    //for (int i = 1; i < lines.Length; i++)
+                    //{
+                    //    var columns = lines[i].Split(',');
+
+                    //    var upRow = string.Join(",", columns) + "," + procof;
+                    //    updatedLines.Add(upRow);
+                    //}
+
+                    //File.WriteAllLines(@"C:\prochash.csv", updatedLines);
+
+//------------------------------------------------------------------------------------------------------------------------------
                     string strcommand = @"cmd.exe";
                     string strparam = @" /c systeminfo | findstr /c:""Host Name"" /c:""OS Name"" /c:""Original Install Date"" /c:""System Boot Time"" /c:""Time Zone"" /c:""Domain"" /c:""Logon Server"" /c:""OS Version"" & ipconfig | findstr /c:""ipv4""";
                     string ipcon = @" /c ipconfig | findstr /i ""ipv4""";
@@ -682,7 +762,7 @@ namespace CyLR
                     ipproc.WaitForExit();
 
                     File.AppendAllText(@"C:\SysInfo.txt", ipinf);
-                    File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "TIMES ARE IN UTC" + Environment.NewLine + "CyLR Version 2024.02.05" +
+                    File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "TIMES ARE IN UTC" + Environment.NewLine + "CyLR Version 2025.04.24" +
                         Environment.NewLine + Environment.NewLine + $"Drive Letter: {Arguments.DriveLet}" +
                         Environment.NewLine + $"Skip inet: {arguments.noinet}" +
                         Environment.NewLine + $"Hash Files: {arguments.hash}" +
@@ -814,7 +894,7 @@ namespace CyLR
                         string chksum256 = BitConverter.ToString(System.Security.Cryptography.SHA256.Create().ComputeHash(f256));
 
                         
-                        string[] lines = { $@"{file}" + "|" + (new FileInfo(file).Length) + "|" + File.GetLastWriteTimeUtc(file).ToString("MM/dd/yyyy HH:mm") + "|" + File.GetCreationTimeUtc(file).ToString("MM/dd/yyyy HH:mm") + "|" + $@"{chksumSHA1.Replace("-", string.Empty)}" + "|" + $@"{chksum256.Replace("-", string.Empty)}" };
+                        string[] lines = { $@"{file}" + "|" + (new FileInfo(file).Length) + "|" + File.GetLastWriteTimeUtc(file).ToString("MM/dd/yyyy HH:mm:ss") + "|" + File.GetCreationTimeUtc(file).ToString("MM/dd/yyyy HH:mm:ss") + "|" + $@"{chksumSHA1.Replace("-", string.Empty)}" + "|" + $@"{chksum256.Replace("-", string.Empty)}" };
                         string[] knhash = { "filezilla","winscp","rclone","mega","7fcff763279c06aaa41da2a4b65c8d038ebcf63e", "52332ce16ee0c393b8eea6e71863ad41e3caeafd", "b97761358338e640a31eef5e5c5773b633890914", "d373052c6f7492e0dd5f2c705bac6b5afe7ffc24", "162b08b0b11827cc024e6b2eed5887ec86339baa", "c8107e5c5e20349a39d32f424668139a36e6cfd0", "a0bdfac3ce1880b32ff9b696458327ce352e3b1d", "763499b37aacd317e7d2f512872f9ed719aacae1", "f0966985745541ba01800aa213509a89a7fdf716", "793e8c44dc51e6cb73977135af71b437f652154c"};
 
                         foreach (string line in lines)
@@ -823,7 +903,7 @@ namespace CyLR
                             {
                                 if (line.Contains(kn) == true)
                                 {
-                                    File.AppendAllText(@"C:\SysInfo.txt", Environment.NewLine + $@"Potentially malicious resident file found at {file}!");
+                                    File.AppendAllText(@"C:\SysInfo.txt", Environment.NewLine + $@"Potentially malicious file found at {file}!");
                                 }
                             }
                         }
@@ -863,7 +943,21 @@ namespace CyLR
             //Enables collection of Recycle Bin data
             if (arguments.recycle == true)
             {
-                defaultPaths.Add($@"{Arguments.DriveLet}\$Recycle.Bin\");
+                try
+                {
+                    string recycleBinPath = Path.Combine($@"{Arguments.DriveLet}\$Recycle.Bin");
+                    string[] userRecycle = Directory.GetDirectories(recycleBinPath);
+
+                    foreach (string userRecycleBin in userRecycle)
+                    {
+                        defaultPaths.Add(userRecycleBin);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    //FAIL
+                }
             }
 
             //If -dl switch is used against something other than "C:", only the drive letter variable MFT will be collected.
@@ -875,7 +969,7 @@ namespace CyLR
 
                 Console.WriteLine("Recording CMD Information...");
                 
-                File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "Times are in UTC time" + Environment.NewLine + "CyLR Version 2024.02.05" +
+                File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "Times are in UTC time" + Environment.NewLine + "CyLR Version 2025.04.24" +
                     Environment.NewLine + Environment.NewLine + $"Drive Letter: {Arguments.DriveLet}" +
                     Environment.NewLine + $"Skip inet: {arguments.noinet}" +
                     Environment.NewLine + $"Hash Files: {arguments.hash}" +
@@ -906,9 +1000,6 @@ namespace CyLR
                         foreach (var User in WinUserFolders)
                         {
 
-                            //defaultPaths.Add($@"{User}\NTUSER.DAT");
-                            //defaultPaths.Add($@"{User}\NTUSER.DAT.LOG1");
-                            //defaultPaths.Add($@"{User}\NTUSER.DAT.LOG2");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG1");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG2");
@@ -957,6 +1048,7 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Windows\Recent");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Office\Recent");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Opera");
+                            defaultPaths.Add($@"{User}\AppData\Local\Opera");
                             defaultPaths.Add($@"{User}\AppData\Local\Opera Software\Opera Stable");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Opera Software\Opera Stable");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Terminal Server Client\Cache");
@@ -992,18 +1084,24 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Local\pCloud\wpflog.log");
                             defaultPaths.Add($@"{User}\Citrix WEM Agent.log");
                             defaultPaths.Add($@"{User}\Citrix WEM Agent Init.log");
+                            defaultPaths.Add($@"{User}\AppData\Local\pCloud\data.db");
+                            defaultPaths.Add($@"{User}\AppData\Local\pCloud\data.db1");
+                            defaultPaths.Add($@"{User}\AppData\Local\pCloud\data.db-wal");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup");
+                            defaultPaths.Add($@"{User}\.azcopy");
                             defaultPaths.Add($@"{User}\AppData\Roaming\FreeFileSync\Logs");
                             defaultPaths.Add($@"{User}\AppData\Local\MEGAsync");
                             defaultPaths.Add($@"{User}\AppData\Local\MEGA");
+                            defaultPaths.Add($@"{User}\AppData\Local\ZohoMeeting\log");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\S3Browser\logs");
+                            defaultPaths.Add($@"{User}\AppData\Local\rClone\rclone.conf");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\rClone\rclone.conf");
                         }
 
 
                     if (Directory.Exists(ServicePro))
                         foreach (var Serve in ServiceFol)
                         {
-                            //defaultPaths.Add($@"{Serve}\NTUSER.DAT");
-                            //defaultPaths.Add($@"{Serve}\NTUSER.DAT.LOG1");
-                            //defaultPaths.Add($@"{Serve}\NTUSER.DAT.LOG2");
                             defaultPaths.Add($@"{Serve}\AppData\Local\Microsoft\Windows\UsrClass.dat");
                             defaultPaths.Add($@"{Serve}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG1");
                             defaultPaths.Add($@"{Serve}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG2");
@@ -1052,6 +1150,7 @@ namespace CyLR
                             defaultPaths.Add($@"{Serve}\AppData\Roaming\Microsoft\Windows\Recent");
                             defaultPaths.Add($@"{Serve}\AppData\Roaming\Microsoft\Office\Recent");
                             defaultPaths.Add($@"{Serve}\AppData\Roaming\Opera");
+                            defaultPaths.Add($@"{Serve}\AppData\Local\Opera");
                             defaultPaths.Add($@"{Serve}\AppData\Local\Opera Software\Opera Stable");
                             defaultPaths.Add($@"{Serve}\AppData\Roaming\Opera Software\Opera Stable");
                             defaultPaths.Add($@"{Serve}\AppData\Local\Microsoft\Terminal Server Client\Cache");
@@ -1090,6 +1189,17 @@ namespace CyLR
                             defaultPaths.Add($@"{Serve}\AppData\Roaming\FreeFileSync\Logs");
                             defaultPaths.Add($@"{Serve}\AppData\Local\MEGAsync");
                             defaultPaths.Add($@"{Serve}\AppData\Local\MEGA");
+                            defaultPaths.Add($@"{Serve}\AppData\Local\ZohoMeeting\log");
+                            defaultPaths.Add($@"{Serve}\AppData\Roaming\S3Browser\logs");
+                            defaultPaths.Add($@"{Serve}\AppData\Local\rClone\rclone.conf");
+                            defaultPaths.Add($@"{Serve}\AppData\Local\pCloud\data.db");
+                            defaultPaths.Add($@"{Serve}\AppData\Local\pCloud\data.db1");
+                            defaultPaths.Add($@"{Serve}\AppData\Local\pCloud\data.db-wal");
+                            defaultPaths.Add($@"{Serve}\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup");
+                            defaultPaths.Add($@"{Serve}\.azcopy");
+                            defaultPaths.Add($@"{Serve}\AppData\Roaming\rClone\rclone.conf");
+                            defaultPaths.Add($@"{Serve}\AppData\Local\rClone\rclone.conf");
+
                         }
                 }
 
@@ -1192,9 +1302,6 @@ namespace CyLR
                     if (Directory.Exists(UserOld))
                         foreach (var User in WinUserOld)
                         {
-                            //defaultPaths.Add($@"{User}\NTUSER.DAT");
-                            //defaultPaths.Add($@"{User}\NTUSER.DAT.LOG1");
-                            //defaultPaths.Add($@"{User}\NTUSER.DAT.LOG2");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG1");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\UsrClass.dat.LOG2");
@@ -1243,6 +1350,7 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Windows\Recent");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Office\Recent");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Opera");
+                            defaultPaths.Add($@"{User}\AppData\Local\Opera");
                             defaultPaths.Add($@"{User}\AppData\Local\Opera Software\Opera Stable");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Opera Software\Opera Stable");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Terminal Server Client\Cache");
@@ -1281,6 +1389,8 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Roaming\FreeFileSync\Logs");
                             defaultPaths.Add($@"{User}\AppData\Local\MEGAsync");
                             defaultPaths.Add($@"{User}\AppData\Local\MEGA");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\S3Browser");
+                            defaultPaths.Add($@"{User}\AppData\Local\ZohoMeeting\log");
                         }
 
                 }
@@ -1327,10 +1437,6 @@ namespace CyLR
                     if (Directory.Exists(UserPath2k3))
                         foreach (var User2k3 in WinUserFolders2k3)
                         {
-                            //defaultPaths.Add($@"{User2k3}\NTUSER.DAT");
-                            //defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG");
-                            //defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG1");
-                            //defaultPaths.Add($@"{User2k3}\NTUSER.DAT.LOG2");
                             defaultPaths.Add($@"{User2k3}\Recent\");
                             defaultPaths.Add($@"{User2k3}\PrivacIE\");
                             defaultPaths.Add($@"{User2k3}\Local Settings\Application Data\Microsoft\Windows\UsrClass.dat");
