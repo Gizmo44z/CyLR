@@ -159,7 +159,11 @@ namespace CyLR
                 $@"{Arguments.DriveLet}\Program Files\ATERA Networks\AteraAgent\Packages\AgentPackageRunCommandInteractive\log.txt",
                 $@"{Arguments.DriveLet}\Program Files (x86)\UltraViewer\UltraViewerService_log.txt",
                 $@"{Arguments.DriveLet}\Windows\Action1\logs",
-                $@"{Arguments.DriveLet}\Windows\ntds.dit"
+                $@"{Arguments.DriveLet}\Windows\NTDS\ntds.dit",
+                $@"{Arguments.DriveLet}\Windows\System32\ntds.dit",
+                $@"{Arguments.DriveLet}\Program Files (x86)\Microsoft SQL Server\MSSQL14.MSSQLSERVER\MSSQL\Log\ERRORLOG",
+                $@"{Arguments.DriveLet}\Program Files\Microsoft SQL Server\MSSQL14.MSSQLSERVER\MSSQL\Log\ERRORLOG",
+                $@"{Arguments.DriveLet}\ProgramData\cloudflared"
             };
 
             if (rec == true)
@@ -220,6 +224,48 @@ namespace CyLR
 
                         });
                     foreach (var file in rcloneFol)
+                    {
+                        defaultPaths.Add($@"{file}");
+                    }
+                }
+                catch (Exception)
+                {
+                    //FAIL
+                }
+
+                try
+                {
+                    string[] rcloneFile = Directory.GetFiles(
+                        $@"{Arguments.DriveLet}\Users\",
+                        "rclone.conf",
+
+                        new EnumerationOptions
+                        {
+                            RecurseSubdirectories = true
+
+                        });
+                    foreach (var file in rcloneFile)
+                    {
+                        defaultPaths.Add($@"{file}");
+                    }
+                }
+                catch (Exception)
+                {
+                    //FAIL
+                }
+
+                try
+                {
+                    string[] meshFol = Directory.GetFiles(
+                        $@"{Arguments.DriveLet}\",
+                        "MeshAgent.*",
+
+                        new EnumerationOptions
+                        {
+                            RecurseSubdirectories = true
+
+                        });
+                    foreach (var file in meshFol)
                     {
                         defaultPaths.Add($@"{file}");
                     }
@@ -512,6 +558,11 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Roaming\rClone\rclone.conf");
                             defaultPaths.Add($@"{User}\AppData\Roaming\S3Browser\logs");
                             defaultPaths.Add($@"{User}\AppData\Local\ZohoMeeting\log");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Cyberduck\Transfers");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Cyberduck\cyberduck.log");
+                            defaultPaths.Add($@"{User}\AppData\Local\temp\QLOG");
+                            defaultPaths.Add($@"{User}\AppData\Local\Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\TabState");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Moonchild Productions");
                         }
 
                 }
@@ -637,7 +688,7 @@ namespace CyLR
                     ipproc.WaitForExit();
 
                     File.AppendAllText(@"C:\SysInfo.txt", ipinf);
-                    File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "Times are in UTC time" + Environment.NewLine + "CyLR Version 2025.04.24" +
+                    File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "Times are in UTC time" + Environment.NewLine + "CyLR Version 2025.05.09" +
                         Environment.NewLine + Environment.NewLine + $"Drive Letter: {Arguments.DriveLet}" +
                         Environment.NewLine + $"Skip inet: {arguments.noinet}" +
                         Environment.NewLine + $"Hash Files: {arguments.hash}" +
@@ -762,7 +813,7 @@ namespace CyLR
                     ipproc.WaitForExit();
 
                     File.AppendAllText(@"C:\SysInfo.txt", ipinf);
-                    File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "TIMES ARE IN UTC" + Environment.NewLine + "CyLR Version 2025.04.24" +
+                    File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "TIMES ARE IN UTC" + Environment.NewLine + "CyLR Version 2025.05.09" +
                         Environment.NewLine + Environment.NewLine + $"Drive Letter: {Arguments.DriveLet}" +
                         Environment.NewLine + $"Skip inet: {arguments.noinet}" +
                         Environment.NewLine + $"Hash Files: {arguments.hash}" +
@@ -969,7 +1020,7 @@ namespace CyLR
 
                 Console.WriteLine("Recording CMD Information...");
                 
-                File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "Times are in UTC time" + Environment.NewLine + "CyLR Version 2025.04.24" +
+                File.AppendAllText(Path.Combine(@"C:\SysInfo.txt"), Environment.NewLine + "Times are in UTC time" + Environment.NewLine + "CyLR Version 2025.05.09" +
                     Environment.NewLine + Environment.NewLine + $"Drive Letter: {Arguments.DriveLet}" +
                     Environment.NewLine + $"Skip inet: {arguments.noinet}" +
                     Environment.NewLine + $"Hash Files: {arguments.hash}" +
@@ -1023,6 +1074,9 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Bookmarks");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Extensions");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Shortcuts");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Web Data");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Web Data");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Web Data");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\History");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Cookies");
                             defaultPaths.Add($@"{User}\AppData\Roaming\Google\Chrome\User Data\Default\Bookmarks");
@@ -1096,6 +1150,11 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Roaming\S3Browser\logs");
                             defaultPaths.Add($@"{User}\AppData\Local\rClone\rclone.conf");
                             defaultPaths.Add($@"{User}\AppData\Roaming\rClone\rclone.conf");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Cyberduck\Transfers");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Cyberduck\cyberduck.log");
+                            defaultPaths.Add($@"{User}\AppData\Local\temp\QLOG");
+                            defaultPaths.Add($@"{User}\AppData\Local\Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\TabState");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Moonchild Productions");
                         }
 
 
@@ -1125,6 +1184,9 @@ namespace CyLR
                             defaultPaths.Add($@"{Serve}\AppData\Local\Google\Chrome\User Data\Profile 2\Bookmarks");
                             defaultPaths.Add($@"{Serve}\AppData\Local\Google\Chrome\User Data\Profile 2\Extensions");
                             defaultPaths.Add($@"{Serve}\AppData\Local\Google\Chrome\User Data\Profile 2\Shortcuts");
+                            defaultPaths.Add($@"{Serve}\AppData\Local\Google\Chrome\User Data\Profile 2\Web Data");
+                            defaultPaths.Add($@"{Serve}\AppData\Local\Google\Chrome\User Data\Profile 1\Web Data");
+                            defaultPaths.Add($@"{Serve}\AppData\Local\Google\Chrome\User Data\Default\Web Data");
                             defaultPaths.Add($@"{Serve}\AppData\Roaming\Google\Chrome\User Data\Default\History");
                             defaultPaths.Add($@"{Serve}\AppData\Roaming\Google\Chrome\User Data\Default\Cookies");
                             defaultPaths.Add($@"{Serve}\AppData\Roaming\Google\Chrome\User Data\Default\Bookmarks");
@@ -1198,7 +1260,11 @@ namespace CyLR
                             defaultPaths.Add($@"{Serve}\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup");
                             defaultPaths.Add($@"{Serve}\.azcopy");
                             defaultPaths.Add($@"{Serve}\AppData\Roaming\rClone\rclone.conf");
-                            defaultPaths.Add($@"{Serve}\AppData\Local\rClone\rclone.conf");
+                            defaultPaths.Add($@"{Serve}\AppData\Roaming\Cyberduck\Transfers");
+                            defaultPaths.Add($@"{Serve}\AppData\Roaming\Cyberduck\cyberduck.log");
+                            defaultPaths.Add($@"{Serve}\AppData\Local\temp\QLOG");
+                            defaultPaths.Add($@"{Serve}\AppData\Local\Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\TabState");
+                            defaultPaths.Add($@"{Serve}\AppData\Roaming\Moonchild Productions");
 
                         }
                 }
@@ -1311,16 +1377,19 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\IEDownloadHistory");
                             defaultPaths.Add($@"{User}\AppData\Local\Microsoft\Windows\INetCookies");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\History");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Web Data");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Cookies");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Bookmarks");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Extensions");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Default\Shortcuts");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\History");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Web Data");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Cookies");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Bookmarks");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Extensions");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 1\Shortcuts");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\History");
+                            defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Web Data");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Cookies");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Bookmarks");
                             defaultPaths.Add($@"{User}\AppData\Local\Google\Chrome\User Data\Profile 2\Extensions");
@@ -1391,6 +1460,19 @@ namespace CyLR
                             defaultPaths.Add($@"{User}\AppData\Local\MEGA");
                             defaultPaths.Add($@"{User}\AppData\Roaming\S3Browser");
                             defaultPaths.Add($@"{User}\AppData\Local\ZohoMeeting\log");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Cyberduck\Transfers");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Cyberduck\cyberduck.log");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\S3Browser\logs");
+                            defaultPaths.Add($@"{User}\AppData\Local\rClone\rclone.conf");
+                            defaultPaths.Add($@"{User}\AppData\Local\pCloud\data.db");
+                            defaultPaths.Add($@"{User}\AppData\Local\pCloud\data.db1");
+                            defaultPaths.Add($@"{User}\AppData\Local\pCloud\data.db-wal");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup");
+                            defaultPaths.Add($@"{User}\.azcopy");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\rClone\rclone.conf");
+                            defaultPaths.Add($@"{User}\AppData\Local\temp\QLOG");
+                            defaultPaths.Add($@"{User}\AppData\Local\Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\TabState");
+                            defaultPaths.Add($@"{User}\AppData\Roaming\Moonchild Productions");
                         }
 
                 }
